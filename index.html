@@ -1,799 +1,922 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
-  <title>物联网通信 · 刷题复习</title>
-  <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-      font-family: system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
-    }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+    <title>物联网通信 · 刷题闯关</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+        }
+        body {
+            background: #f0f4fa;
+            padding: 16px;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        .app {
+            max-width: 820px;
+            margin: 0 auto;
+            width: 100%;
+        }
+        /* 头部 */
+        .header {
+            background: linear-gradient(145deg, #0b2a4a, #1b3e62);
+            color: white;
+            padding: 20px 24px;
+            border-radius: 28px;
+            box-shadow: 0 10px 20px rgba(0,20,40,0.25);
+            margin-bottom: 20px;
+        }
+        .header h1 {
+            font-weight: 600;
+            font-size: 1.8rem;
+            letter-spacing: 0.5px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+        .header h1 small {
+            font-size: 1rem;
+            font-weight: 400;
+            opacity: 0.85;
+            margin-left: 6px;
+        }
+        .header .meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            margin-top: 12px;
+            font-size: 0.95rem;
+            background: rgba(255,255,255,0.08);
+            padding: 10px 14px;
+            border-radius: 40px;
+        }
+        .header .meta .badge {
+            background: #ffb347;
+            color: #1e2f3f;
+            padding: 0 14px;
+            border-radius: 30px;
+            font-weight: 600;
+            font-size: 0.85rem;
+            line-height: 1.8;
+        }
+        .progress-bar {
+            width: 100%;
+            height: 6px;
+            background: rgba(255,255,255,0.2);
+            border-radius: 10px;
+            margin-top: 12px;
+            overflow: hidden;
+        }
+        .progress-bar .fill {
+            height: 100%;
+            background: #ffb347;
+            width: 0%;
+            border-radius: 10px;
+            transition: width 0.3s;
+        }
 
-    body {
-      background: #f4f7fb;
-      padding: 16px;
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-    }
+        /* 控制栏 */
+        .controls {
+            background: white;
+            border-radius: 24px;
+            padding: 14px 18px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.04);
+            margin-bottom: 20px;
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 10px 12px;
+        }
+        .controls .mode-btn {
+            background: #eef3f9;
+            border: none;
+            border-radius: 40px;
+            padding: 8px 18px;
+            font-weight: 500;
+            color: #1a3852;
+            cursor: pointer;
+            transition: 0.2s;
+            font-size: 0.9rem;
+            flex: 1 0 auto;
+        }
+        .controls .mode-btn.active {
+            background: #1b3e62;
+            color: white;
+            box-shadow: 0 4px 10px rgba(27, 62, 98, 0.3);
+        }
+        .controls .mode-btn:hover:not(.active) {
+            background: #d0dfef;
+        }
+        .controls .stats {
+            margin-left: auto;
+            font-size: 0.9rem;
+            background: #eaf0f8;
+            padding: 5px 16px;
+            border-radius: 40px;
+            color: #1d3b57;
+            font-weight: 500;
+            white-space: nowrap;
+        }
 
-    .app {
-      max-width: 860px;
-      margin: 0 auto;
-      width: 100%;
-    }
+        /* 题目卡片 */
+        .question-card {
+            background: white;
+            border-radius: 24px;
+            padding: 24px 24px 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 6px 18px rgba(0, 20, 40, 0.06);
+            border: 1px solid #e9eff5;
+            transition: 0.2s;
+        }
+        .q-header {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            flex-wrap: wrap;
+            margin-bottom: 12px;
+        }
+        .q-number {
+            background: #dce6f2;
+            color: #1b3e62;
+            font-weight: 600;
+            font-size: 0.8rem;
+            border-radius: 30px;
+            padding: 0 14px;
+            line-height: 1.9;
+        }
+        .q-chapter {
+            font-size: 0.8rem;
+            background: #f0f4fc;
+            padding: 0 12px;
+            border-radius: 30px;
+            color: #2b5477;
+            font-weight: 500;
+            line-height: 1.9;
+        }
+        .q-type {
+            font-size: 0.75rem;
+            background: #d7e5f5;
+            padding: 0 12px;
+            border-radius: 30px;
+            color: #113753;
+            font-weight: 600;
+            line-height: 1.9;
+            margin-left: auto;
+        }
+        .q-text {
+            font-size: 1.05rem;
+            line-height: 1.7;
+            margin: 8px 0 14px 0;
+            color: #0e2a41;
+            font-weight: 450;
+        }
+        .q-text .fill-placeholder {
+            display: inline-block;
+            min-width: 80px;
+            border-bottom: 2px dashed #6f8db0;
+            margin: 0 4px;
+            color: #1f4b70;
+            font-weight: 500;
+        }
 
-    /* 头部 */
-    .header {
-      background: linear-gradient(145deg, #0b2a4a, #1b3e62);
-      color: white;
-      padding: 20px 22px;
-      border-radius: 28px;
-      box-shadow: 0 10px 20px rgba(0,20,40,0.25);
-      margin-bottom: 22px;
-    }
-    .header h1 {
-      font-weight: 600;
-      font-size: 1.8rem;
-      letter-spacing: 0.5px;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      flex-wrap: wrap;
-    }
-    .header h1 small {
-      font-size: 1rem;
-      font-weight: 400;
-      opacity: 0.85;
-      margin-left: 6px;
-    }
-    .header .meta {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      flex-wrap: wrap;
-      margin-top: 12px;
-      font-size: 0.95rem;
-      background: rgba(255,255,255,0.08);
-      padding: 10px 14px;
-      border-radius: 40px;
-      backdrop-filter: blur(2px);
-    }
-    .header .meta span {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-    }
-    .header .meta .badge {
-      background: #ffb347;
-      color: #1e2f3f;
-      padding: 0 12px;
-      border-radius: 30px;
-      font-weight: 600;
-      font-size: 0.85rem;
-      line-height: 1.8;
-    }
+        /* 选项 */
+        .options {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            margin: 12px 0 14px 0;
+        }
+        .option-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 10px 16px;
+            border-radius: 14px;
+            background: #f8fafd;
+            border: 2px solid transparent;
+            cursor: pointer;
+            transition: 0.15s;
+            font-size: 0.98rem;
+        }
+        .option-item:hover {
+            background: #edf3fa;
+        }
+        .option-item.selected {
+            border-color: #1b3e62;
+            background: #e1ecf9;
+        }
+        .option-item.correct {
+            border-color: #2a9d8f;
+            background: #e2f3ef;
+        }
+        .option-item.wrong {
+            border-color: #e76f51;
+            background: #fde8e3;
+        }
+        .option-item .opt-label {
+            font-weight: 600;
+            color: #1b3f60;
+            min-width: 28px;
+        }
+        .option-item input[type="radio"] {
+            display: none;
+        }
 
-    /* 控制栏 */
-    .controls {
-      background: white;
-      border-radius: 24px;
-      padding: 18px 20px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.04);
-      margin-bottom: 24px;
-      display: flex;
-      flex-wrap: wrap;
-      align-items: center;
-      gap: 14px 10px;
-    }
-    .controls label {
-      font-weight: 500;
-      color: #1f3a57;
-      font-size: 0.95rem;
-      display: flex;
-      align-items: center;
-      gap: 6px;
-    }
-    .controls select {
-      background: #eef3f9;
-      border: 1px solid #d0ddee;
-      border-radius: 40px;
-      padding: 8px 18px 8px 16px;
-      font-size: 0.95rem;
-      font-weight: 500;
-      color: #0b2a4a;
-      outline: none;
-      cursor: pointer;
-      min-width: 140px;
-    }
-    .controls select:focus {
-      border-color: #2a6b9c;
-      box-shadow: 0 0 0 3px rgba(42,107,156,0.2);
-    }
-    .controls .stats {
-      margin-left: auto;
-      font-size: 0.95rem;
-      background: #eaf0f8;
-      padding: 6px 18px;
-      border-radius: 40px;
-      color: #1d3b57;
-      font-weight: 500;
-      white-space: nowrap;
-    }
-    .controls .reset-btn {
-      background: #e5edf6;
-      border: none;
-      border-radius: 40px;
-      padding: 7px 18px;
-      font-weight: 500;
-      color: #1a3852;
-      cursor: pointer;
-      transition: 0.2s;
-      font-size: 0.9rem;
-      display: inline-flex;
-      align-items: center;
-      gap: 4px;
-    }
-    .controls .reset-btn:hover {
-      background: #d0dfef;
-    }
+        /* 填空输入 */
+        .fill-input {
+            border: 2px solid #d0ddee;
+            border-radius: 12px;
+            padding: 10px 16px;
+            font-size: 1rem;
+            width: 100%;
+            max-width: 300px;
+            outline: none;
+            transition: 0.2s;
+            background: #fafcff;
+            margin: 4px 0 8px 0;
+        }
+        .fill-input:focus {
+            border-color: #2a6b9c;
+            box-shadow: 0 0 0 3px rgba(42,107,156,0.15);
+        }
+        .fill-input.correct {
+            border-color: #2a9d8f;
+            background: #e2f3ef;
+        }
+        .fill-input.wrong {
+            border-color: #e76f51;
+            background: #fde8e3;
+        }
 
-    /* 题目卡片 */
-    .question-card {
-      background: white;
-      border-radius: 24px;
-      padding: 22px 24px;
-      margin-bottom: 20px;
-      box-shadow: 0 6px 18px rgba(0, 20, 40, 0.06);
-      border: 1px solid #e9eff5;
-      transition: 0.2s;
-    }
-    .question-card:hover {
-      border-color: #cbdbe9;
-      box-shadow: 0 8px 20px rgba(0, 30, 60, 0.08);
-    }
+        /* 答案反馈区 */
+        .feedback {
+            margin: 14px 0 8px 0;
+            padding: 12px 16px;
+            border-radius: 14px;
+            font-weight: 500;
+            display: none;
+        }
+        .feedback.show {
+            display: block;
+        }
+        .feedback.correct {
+            background: #e2f3ef;
+            color: #1a6b5e;
+            border-left: 4px solid #2a9d8f;
+        }
+        .feedback.wrong {
+            background: #fde8e3;
+            color: #b13e2a;
+            border-left: 4px solid #e76f51;
+        }
+        .feedback .answer-reveal {
+            font-weight: 600;
+            color: #1b3e62;
+        }
 
-    .q-header {
-      display: flex;
-      gap: 12px;
-      align-items: flex-start;
-      margin-bottom: 10px;
-    }
-    .q-number {
-      background: #dce6f2;
-      color: #1b3e62;
-      font-weight: 600;
-      font-size: 0.8rem;
-      border-radius: 30px;
-      padding: 0 12px;
-      line-height: 1.9;
-      white-space: nowrap;
-      flex-shrink: 0;
-      margin-top: 2px;
-    }
-    .q-chapter {
-      font-size: 0.8rem;
-      background: #f0f4fc;
-      padding: 0 12px;
-      border-radius: 30px;
-      color: #2b5477;
-      font-weight: 500;
-      line-height: 1.9;
-      white-space: nowrap;
-    }
-    .q-type {
-      font-size: 0.75rem;
-      background: #d7e5f5;
-      padding: 0 12px;
-      border-radius: 30px;
-      color: #113753;
-      font-weight: 600;
-      line-height: 1.9;
-      margin-left: auto;
-    }
+        /* 按钮 */
+        .btn-group {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+            margin-top: 12px;
+        }
+        .btn {
+            background: #eef3f9;
+            border: none;
+            border-radius: 40px;
+            padding: 10px 28px;
+            font-weight: 600;
+            color: #1a3852;
+            cursor: pointer;
+            transition: 0.2s;
+            font-size: 0.95rem;
+            flex: 1 1 auto;
+        }
+        .btn-primary {
+            background: #1b3e62;
+            color: white;
+            box-shadow: 0 4px 10px rgba(27, 62, 98, 0.25);
+        }
+        .btn-primary:hover {
+            background: #2a5477;
+            transform: translateY(-1px);
+        }
+        .btn-primary:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+        .btn-success {
+            background: #2a9d8f;
+            color: white;
+        }
+        .btn-success:hover {
+            background: #21867a;
+        }
+        .btn-outline {
+            background: transparent;
+            border: 2px solid #d0ddee;
+        }
+        .btn-outline:hover {
+            background: #f0f4fc;
+        }
 
-    .q-text {
-      font-size: 1.05rem;
-      line-height: 1.6;
-      margin: 12px 0 16px 0;
-      color: #0e2a41;
-      font-weight: 450;
-    }
-    .q-text .fill-placeholder {
-      display: inline-block;
-      min-width: 80px;
-      border-bottom: 2px dashed #6f8db0;
-      margin: 0 4px;
-      color: #1f4b70;
-      font-weight: 500;
-    }
+        /* 闯关进度 */
+        .card-progress {
+            text-align: center;
+            font-size: 0.95rem;
+            color: #3d5f7c;
+            margin-bottom: 16px;
+            padding: 8px;
+            background: #f8fafd;
+            border-radius: 40px;
+        }
+        .card-progress strong {
+            color: #1b3e62;
+        }
 
-    .options {
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-      margin: 14px 0 12px 0;
-      padding-left: 4px;
-    }
-    .option-item {
-      display: flex;
-      align-items: baseline;
-      gap: 10px;
-      font-size: 0.98rem;
-      padding: 6px 10px;
-      border-radius: 12px;
-      background: #f8fafd;
-      border-left: 3px solid transparent;
-    }
-    .option-item .opt-label {
-      font-weight: 600;
-      color: #1b3f60;
-      min-width: 28px;
-    }
+        /* 空状态 */
+        .empty-state {
+            background: white;
+            border-radius: 40px;
+            padding: 40px 20px;
+            text-align: center;
+            color: #3d5f7c;
+            font-size: 1.1rem;
+        }
 
-    .answer-area {
-      margin: 16px 0 8px 0;
-      padding-top: 12px;
-      border-top: 1px dashed #d8e2ef;
-      display: flex;
-      flex-wrap: wrap;
-      align-items: center;
-      gap: 12px 20px;
-    }
-    .answer-btn {
-      background: #e6eff9;
-      border: none;
-      border-radius: 40px;
-      padding: 6px 22px;
-      font-weight: 500;
-      color: #1f4b70;
-      cursor: pointer;
-      font-size: 0.9rem;
-      transition: 0.15s;
-      box-shadow: 0 1px 3px rgba(0,0,0,0.02);
-      display: inline-flex;
-      align-items: center;
-      gap: 5px;
-    }
-    .answer-btn:hover {
-      background: #d2e2f5;
-      transform: scale(0.97);
-    }
-    .answer-btn.showing {
-      background: #1f5a7e;
-      color: white;
-      box-shadow: 0 4px 8px rgba(26, 80, 120, 0.2);
-    }
-    .answer-text {
-      font-size: 1rem;
-      background: #e2ecf9;
-      padding: 4px 18px;
-      border-radius: 40px;
-      color: #0c2b47;
-      font-weight: 500;
-      word-break: break-word;
-      display: inline-block;
-    }
-    .answer-text.hidden {
-      display: none;
-    }
+        /* 移动端优化 */
+        @media (max-width: 600px) {
+            .header h1 { font-size: 1.4rem; }
+            .controls { flex-direction: column; align-items: stretch; }
+            .controls .stats { margin-left: 0; text-align: center; }
+            .question-card { padding: 18px; }
+            .q-text { font-size: 1rem; }
+            .fill-input { max-width: 100%; }
+        }
 
-    .q-footer {
-      display: flex;
-      justify-content: flex-end;
-      font-size: 0.75rem;
-      color: #7f98b2;
-      margin-top: 6px;
-    }
-
-    /* 无题目提示 */
-    .empty-state {
-      background: white;
-      border-radius: 40px;
-      padding: 40px 20px;
-      text-align: center;
-      color: #3d5f7c;
-      font-size: 1.1rem;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.02);
-    }
-
-    /* 移动端优化 */
-    @media (max-width: 600px) {
-      .header h1 { font-size: 1.5rem; }
-      .controls { flex-direction: column; align-items: stretch; }
-      .controls .stats { margin-left: 0; text-align: center; }
-      .controls .reset-btn { justify-content: center; }
-      .question-card { padding: 18px; }
-      .q-text { font-size: 1rem; }
-    }
-
-    /* 进度条小标记 */
-    .progress-bar {
-      width: 100%;
-      height: 6px;
-      background: #d7e2ef;
-      border-radius: 10px;
-      margin: 6px 0 2px 0;
-      overflow: hidden;
-    }
-    .progress-bar .fill {
-      height: 100%;
-      background: linear-gradient(90deg, #2f7eb3, #4a9cd9);
-      width: 0%;
-      border-radius: 10px;
-      transition: width 0.2s;
-    }
-  </style>
+        /* 闯关模式专用 */
+        .card-mode-indicator {
+            background: linear-gradient(135deg, #1b3e62, #2a6b9c);
+            color: white;
+            padding: 12px 20px;
+            border-radius: 40px;
+            text-align: center;
+            margin-bottom: 16px;
+            font-weight: 500;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+        .card-mode-indicator .score {
+            background: rgba(255,255,255,0.2);
+            padding: 2px 16px;
+            border-radius: 30px;
+        }
+    </style>
 </head>
 <body>
 <div class="app" id="app">
 
-  <header class="header">
-    <h1>
-      📡 物联网通信
-      <small>期末刷题</small>
-    </h1>
-    <div class="meta">
-      <span>📚 第1-8章 · 填空 & 选择</span>
-      <span class="badge" id="progressText">0 / 0</span>
+    <header class="header">
+        <h1>
+            📡 物联网通信
+            <small>刷题 · 闯关</small>
+        </h1>
+        <div class="meta">
+            <span>📚 第1-8章 · 共 <span id="totalQCount">0</span> 题</span>
+            <span class="badge" id="progressText">0 / 0</span>
+        </div>
+        <div class="progress-bar"><div class="fill" id="progressFill"></div></div>
+    </header>
+
+    <!-- 模式切换 -->
+    <div class="controls">
+        <button class="mode-btn active" data-mode="full">📖 完整试卷</button>
+        <button class="mode-btn" data-mode="random">🎲 随机抽题</button>
+        <button class="mode-btn" data-mode="card">🃏 卡片闯关</button>
+        <span class="stats" id="statsDisplay">📝 <span id="shownCount">0</span> 题</span>
     </div>
-    <div class="progress-bar"><div class="fill" id="progressFill" style="width:0%"></div></div>
-  </header>
 
-  <!-- 控制栏 -->
-  <div class="controls">
-    <label>📖 章节
-      <select id="chapterFilter">
-        <option value="all">全部章节</option>
-        <option value="1">第1章 物联网通信技术概述</option>
-        <option value="2">第2章 通信原理</option>
-        <option value="3">第3章 ZigBee通信技术</option>
-        <option value="4">第4章 蓝牙通信技术</option>
-        <option value="5">第5章 RFID通信技术</option>
-        <option value="6">第6章 Wi-Fi通信</option>
-        <option value="7">第7章 NB-IoT与LoRa</option>
-        <option value="8">第8章 移动通信技术</option>
-      </select>
-    </label>
-    <button class="reset-btn" id="resetAllBtn">⟳ 重置所有答案</button>
-    <span class="stats" id="statsDisplay">已显示 <span id="shownCount">0</span> 题</span>
-  </div>
+    <!-- 闯关模式指示器 (默认隐藏) -->
+    <div id="cardIndicator" class="card-mode-indicator" style="display:none;">
+        <span>🎯 闯关进度</span>
+        <span>✅ <span id="cardCorrect">0</span> 正确 | ❌ <span id="cardWrong">0</span> 错误</span>
+        <span class="score">📊 <span id="cardScore">0</span>%</span>
+    </div>
 
-  <!-- 题目列表容器 -->
-  <div id="questionList"></div>
+    <!-- 题目列表容器 -->
+    <div id="questionList"></div>
 
-  <div style="height: 20px;"></div>
+    <div style="height: 20px;"></div>
 </div>
 
 <script>
-  (function() {
-    // --------------------------------------------------------------
-    // 原始数据：从文档中提取（第1~8章）
-    // 每项：{ chapter, type, text, options(选择题), answer, index }
-    // --------------------------------------------------------------
-    const rawQuestions = [];
+    // ============================================================
+    // 1. 题库数据 (沿用物联网题目，从第1~8章提取)
+    //    每项: { chapter, type, text, options(可选), answer, id }
+    // ============================================================
+    const questionBank = [];
 
     // ----- 第1章 物联网通信技术概述 -----
     const ch1Fills = [
-      "物联网由三个层次构成，即信息的感知控制层、______和应用层。",
-      "物联网通信系统主要包括感知控制通信和核心承载网通信两方面，其中传感器网采用的通信技术主要是______。",
-      "RFID 技术是一种非接触式的自动识别技术，它通过______自动识别目标对象并获取相关数据。",
-      "ZigBee 技术采用 DSSS 技术调制发射，用于多个______组成网状网络，是一种短距离、低速率、低功耗的无线网络传输技术。",
-      "可寻址远程传感器高速通道的开放通信协议 (HART)，是一种用于现场智能仪表和______之间的通信协议。",
-      "在区域内，无线传输电波的频段是不能重叠的，如重叠则会形成电磁波干扰，从而影响通信质量。______则可以通过重叠的频段来传输信息。",
-      "支撑异构网络的通信技术，应在以下几方面进行网络融合：______、终端融合、网络融合。",
-      "发展广泛地支持______和大数据技术的物联网通信技术，解决了因物联网规模扩大而对通信速度、带宽等需求增加的问题。"
+        "物联网由三个层次构成，即信息的感知控制层、______和应用层。",
+        "物联网通信系统主要包括感知控制通信和核心承载网通信两方面，其中传感器网采用的通信技术主要是______。",
+        "RFID 技术是一种非接触式的自动识别技术，它通过______自动识别目标对象并获取相关数据。",
+        "ZigBee 技术采用 DSSS 技术调制发射，用于多个______组成网状网络，是一种短距离、低速率、低功耗的无线网络传输技术。",
+        "可寻址远程传感器高速通道的开放通信协议 (HART)，是一种用于现场智能仪表和______之间的通信协议。",
+        "在区域内，无线传输电波的频段是不能重叠的，如重叠则会形成电磁波干扰，从而影响通信质量。______则可以通过重叠的频段来传输信息。",
+        "支撑异构网络的通信技术，应在以下几方面进行网络融合：______、终端融合、网络融合。",
+        "发展广泛地支持______和大数据技术的物联网通信技术，解决了因物联网规模扩大而对通信速度、带宽等需求增加的问题。"
     ];
-    const ch1FillAnswers = ["网络传输层", "短距离通信技术", "射频信号", "节点", "控制室设备", "扩频技术", "业务融合", "云计算"];
+    const ch1FillAns = ["网络传输层", "短距离通信技术", "射频信号", "节点", "控制室设备", "扩频技术", "业务融合", "云计算"];
     ch1Fills.forEach((q, i) => {
-      rawQuestions.push({ chapter: 1, type: '填空', text: q, answer: ch1FillAnswers[i], options: null });
+        questionBank.push({ chapter: 1, type: '填空', text: q, options: null, answer: ch1FillAns[i] });
     });
 
     const ch1Choices = [
-      { q: "三层结构类型的物联网不包括（ ）。", opts: ["A. 感知控制层", "B. 网络传输层", "C. 应用层", "D. 会话层"], ans: "D" },
-      { q: "物联网的核心是（ ）。", opts: ["A. 应用", "B. 产业", "C. 技术", "D. 标准"], ans: "A" },
-      { q: "属于感知控制层通信技术的是（ ）。", opts: ["A. ZigBee技术", "B. 3G网络", "C. 4G网络", "D. 局域网"], ans: "A" },
-      { q: "属于网络传输层通信技术的是（ ）。", opts: ["A. ZigBee技术", "B. 4G网络", "C. 蓝牙技术", "D. IrDA红外连接技术"], ans: "B" },
-      { q: "属于应用层通信技术的是（ ）。", opts: ["A. ZigBee技术", "B. 虚拟现实", "C. 蓝牙技术", "D. RFID"], ans: "B" },
-      { q: "UWB技术的带宽频率是（ ）。", opts: ["A. 7.5GHz", "B. 2.5GHz", "C. 11GHz", "D. 20GHz"], ans: "A" },
-      { q: "物联网中的异构网络融合中，不包括的融合方式为（ ）。", opts: ["A. 业务融合", "B. 网络融合", "C. 传输介质融合", "D. 终端融合"], ans: "C" },
-      { q: "物联网控制层内的终端接入网络的首选为（ ）。", opts: ["A. 有线通信方式", "B. 无线通信方式", "C. 光纤通信", "D. 计算机通信"], ans: "B" },
-      { q: "Wi-Fi通信的最高带宽为（ ）。", opts: ["A. 5MB", "B. 2MB", "C. 20MB", "D. 11MB"], ans: "D" },
-      { q: "下列应用中不属于物联网应用的是（ ）。", opts: ["A. 智能交通", "B. 智能电网", "C. 视频会议", "D. 物流追踪"], ans: "C" }
+        { q: "三层结构类型的物联网不包括（ ）。", opts: ["A. 感知控制层", "B. 网络传输层", "C. 应用层", "D. 会话层"], ans: "D" },
+        { q: "物联网的核心是（ ）。", opts: ["A. 应用", "B. 产业", "C. 技术", "D. 标准"], ans: "A" },
+        { q: "属于感知控制层通信技术的是（ ）。", opts: ["A. ZigBee技术", "B. 3G网络", "C. 4G网络", "D. 局域网"], ans: "A" },
+        { q: "属于网络传输层通信技术的是（ ）。", opts: ["A. ZigBee技术", "B. 4G网络", "C. 蓝牙技术", "D. IrDA红外连接技术"], ans: "B" },
+        { q: "属于应用层通信技术的是（ ）。", opts: ["A. ZigBee技术", "B. 虚拟现实", "C. 蓝牙技术", "D. RFID"], ans: "B" },
+        { q: "UWB技术的带宽频率是（ ）。", opts: ["A. 7.5GHz", "B. 2.5GHz", "C. 11GHz", "D. 20GHz"], ans: "A" },
+        { q: "物联网中的异构网络融合中，不包括的融合方式为（ ）。", opts: ["A. 业务融合", "B. 网络融合", "C. 传输介质融合", "D. 终端融合"], ans: "C" },
+        { q: "物联网控制层内的终端接入网络的首选为（ ）。", opts: ["A. 有线通信方式", "B. 无线通信方式", "C. 光纤通信", "D. 计算机通信"], ans: "B" },
+        { q: "Wi-Fi通信的最高带宽为（ ）。", opts: ["A. 5MB", "B. 2MB", "C. 20MB", "D. 11MB"], ans: "D" },
+        { q: "下列应用中不属于物联网应用的是（ ）。", opts: ["A. 智能交通", "B. 智能电网", "C. 视频会议", "D. 物流追踪"], ans: "C" }
     ];
     ch1Choices.forEach(item => {
-      rawQuestions.push({ chapter: 1, type: '选择', text: item.q, options: item.opts, answer: item.ans });
+        questionBank.push({ chapter: 1, type: '选择', text: item.q, options: item.opts, answer: item.ans });
     });
 
     // ----- 第2章 通信原理 -----
     const ch2Fills = [
-      "______是为了满足用户决策的需要而经过加工处理的数据。",
-      "从电磁学的角度讲，干扰信号传输的能量场称为______。",
-      "______信号代表消息的信号参量取值连续。",
-      "调制是指把信号转换成适合在信道中传输的形式的一种过程。广义调制分为______调制和______调制。",
-      "将代表信息的数字信号码元序列以成组的方式在两条或两条以上的信道上同时传输的方式称为______传输。"
+        "______是为了满足用户决策的需要而经过加工处理的数据。",
+        "从电磁学的角度讲，干扰信号传输的能量场称为______。",
+        "______信号代表消息的信号参量取值连续。",
+        "调制是指把信号转换成适合在信道中传输的形式的一种过程。广义调制分为______调制和______调制。",
+        "将代表信息的数字信号码元序列以成组的方式在两条或两条以上的信道上同时传输的方式称为______传输。"
     ];
     const ch2FillAns = ["信息", "噪声", "模拟", "基带、带通", "并行"];
-    ch2Fills.forEach((q,i) => rawQuestions.push({ chapter:2, type:'填空', text:q, answer:ch2FillAns[i], options:null }));
+    ch2Fills.forEach((q, i) => questionBank.push({ chapter: 2, type: '填空', text: q, options: null, answer: ch2FillAns[i] }));
 
     const ch2Choices = [
-      { q:"（ ）代表消息的信号参量取值连续。", opts:["A. 数字信号","B. 调制信号","C. 模拟信号","D. 解调信号"], ans:"C" },
-      { q:"（ ）是采用频谱搬移的办法使不同信号分别占据不同的频带进行传输的。", opts:["A. 频分复用","B. 时分复用","C. 码分复用","D. 波分复用"], ans:"A" },
-      { q:"将代表信息的数字信号码元序列以成组的方式在两条或两条以上的并行信道上同时传输的方式称为（ ）。", opts:["A. 串行传输","B. 同步传输","C. 并行传输","D. 异步传输"], ans:"C" },
-      { q:"将数字信号码元序列一个码元接一个码元地在一条信道上传输的方式称为（ ）。", opts:["A. 串行传输","B. 同步传输","C. 并行传输","D. 异步传输"], ans:"A" },
-      { q:"（ ）通信是指通信双方都能收发消息，但不能同时收发的工作方式。", opts:["A. 随机","B. 单工","C. 全双工","D. 半双工"], ans:"D" }
+        { q: "（ ）代表消息的信号参量取值连续。", opts: ["A. 数字信号", "B. 调制信号", "C. 模拟信号", "D. 解调信号"], ans: "C" },
+        { q: "（ ）是采用频谱搬移的办法使不同信号分别占据不同的频带进行传输的。", opts: ["A. 频分复用", "B. 时分复用", "C. 码分复用", "D. 波分复用"], ans: "A" },
+        { q: "将代表信息的数字信号码元序列以成组的方式在两条或两条以上的并行信道上同时传输的方式称为（ ）。", opts: ["A. 串行传输", "B. 同步传输", "C. 并行传输", "D. 异步传输"], ans: "C" },
+        { q: "将数字信号码元序列一个码元接一个码元地在一条信道上传输的方式称为（ ）。", opts: ["A. 串行传输", "B. 同步传输", "C. 并行传输", "D. 异步传输"], ans: "A" },
+        { q: "（ ）通信是指通信双方都能收发消息，但不能同时收发的工作方式。", opts: ["A. 随机", "B. 单工", "C. 全双工", "D. 半双工"], ans: "D" }
     ];
-    ch2Choices.forEach(item => rawQuestions.push({ chapter:2, type:'选择', text:item.q, options:item.opts, answer:item.ans }));
+    ch2Choices.forEach(item => {
+        questionBank.push({ chapter: 2, type: '选择', text: item.q, options: item.opts, answer: item.ans });
+    });
 
-    // ----- 第3章 ZigBee通信技术 -----
+    // ----- 第3章 ZigBee通信技术 (部分代表性题目) -----
     const ch3Fills = [
-      "节点的网络深度是指从节点到根节点协调器的______。",
-      "网络层管理实体提供管理服务是允许一个应用程序与______相互作用。",
-      "ZigBee 是一种开放式的基于______协议的无线个人局域网标准。",
-      "ZigBee 采用了______的碰撞避免机制，以提高系统的兼容性。",
-      "节点的______标识节点在网络拓扑图中的层次位置。",
-      "ZigBee 技术的安全性高，其加密技术采用了______算法。",
-      "ZigBee 网络典型的搜索设备时延为______ms。",
-      "ZigBee 协议栈共包括四个层次，分别为______、______、______和应用层。",
-      "ZigBee 协议栈的物理层和______由 IEEE 802.15.4 标准定义。",
-      "ZigBee 协议栈的网络层和应用层标准由______制定。",
-      "ZigBee 协议栈的每个协议层都有一个______和管理实体。",
-      "物理层管理实体的英文缩写为______。",
-      "IEEE 802.15.4 有两个物理层，运行在两个不同的频率范围，分别为______MHz 和 2.4GHz。",
-      "ZigBee 使用的三个频段共定义了______个物理信道。",
-      "父节点会为第一个与它关联的路由器节点分配比自己大______的地址。",
-      "节点存储的数据结构有路由表、______和邻居节点列表。",
-      "IEEE 802 系列标准把数据链路层分成______和媒体访问控制子层。",
-      "当协调器建立一个新的网络后，首先将自己的 16 位网络地址初始化为 0，网络深度初始化为______。",
-      "当一个路由器节点的 C_skip(d) 为______时，它就不再具备为子节点分配地址的能力。",
-      "应用层的主要功能包括______、在绑定的设备之间传送消息。",
-      "应用层由三部分构成，分别是应用支持子层(APS)、厂商定义的应用对象(AF)和______。",
-      "ZigBee 网络中的应用框架是为驻扎在 ZigBee 设备中的应用对象提供活动的环境，最多可以定义______个相对独立的应用程序对象。",
-      "ZigBee 协议按照开放系统互联的 7 层模型将协议分成了一系列的层结构，各层之间通过相应的______来提供服务。",
-      "ZigBee 协议为了实现层与层之间的关联，采用了称为服务______的操作。",
-      "ZigBee 原语有四种类型，分别是______、指示原语、响应原语和确认原语。",
-      "RFD 通常只能用作 ZigBee 网络中的______设备。",
-      "ZigBee 网络中包括两种无线设备：______和精简功能设备。",
-      "ZigBee 网络中的每个节点都有一个______和一个 64 位 IEEE 扩展地址。",
-      "ZigBee 网络中有三种类型的节点，分别是______、______和 ZigBee 终端节点。",
-      "ZigBee 网络中 16 位网络地址是在节点加入网络时由______动态分配，仅用于路由机制和网络中的数据传输。"
+        "节点的网络深度是指从节点到根节点协调器的______。",
+        "网络层管理实体提供管理服务是允许一个应用程序与______相互作用。",
+        "ZigBee 是一种开放式的基于______协议的无线个人局域网标准。",
+        "ZigBee 采用了______的碰撞避免机制，以提高系统的兼容性。",
+        "节点的______标识节点在网络拓扑图中的层次位置。",
+        "ZigBee 技术的安全性高，其加密技术采用了______算法。",
+        "ZigBee 网络典型的搜索设备时延为______ms。"
     ];
-    const ch3FillAns = [
-      "最短跳数", "协议栈", "IEEE 802.15.4", "CSMA-CA", "网络深度", "AES-128", "30",
-      "物理层、数据链路层、网络层", "MAC层（数据链路层）", "ZigBee联盟", "数据实体", "PLME",
-      "868/915", "27", "1", "路由发现表", "逻辑链路控制子层", "0", "0",
-      "绑定管理", "ZigBee设备对象（ZDO）", "240", "接口", "原语",
-      "请求原语", "终端", "全功能设备", "16位网络短地址",
-      "ZigBee 协调器节点、 ZigBee 路由器节点", "父节点"
-    ];
-    ch3Fills.forEach((q,i) => rawQuestions.push({ chapter:3, type:'填空', text:q, answer:ch3FillAns[i], options:null }));
+    const ch3FillAns = ["最短跳数", "协议栈", "IEEE 802.15.4", "CSMA-CA", "网络深度", "AES-128", "30"];
+    ch3Fills.forEach((q, i) => questionBank.push({ chapter: 3, type: '填空', text: q, options: null, answer: ch3FillAns[i] }));
 
     const ch3Choices = [
-      { q:"下面（ ）不是 ZigBee 技术的优点。", opts:["A. 近距离","B. 高功耗","C. 低复杂度","D. 低数据速率"], ans:"B" },
-      { q:"作为 ZigBee 技术的物理层和媒体访问控制子层的标准协议是（ ）。", opts:["A. IEEE 802.15.4","B. IEEE 802.11b","C. IEEE 802.11a","D. IEEE 802.12"], ans:"A" },
-      { q:"ZigBee 网络典型的休眠激活的时延是（ ）ms。", opts:["A. 30","B. 20","C. 10","D. 15"], ans:"D" },
-      { q:"ZigBee 适应的应用场合为（ ）。", opts:["A. 个人健康监护","B. 玩具和游戏","C. 家庭自动化","D. 上述全部"], ans:"D" },
-      { q:"ZigBee 无线网络技术用于（ ）无线连接。", opts:["A. 近距离","B. 远距离","C. 任意距离","D. 中远距离"], ans:"A" },
-      { q:"根据 IEEE 802.15.4 标准协议，ZigBee 的工作频段分为（ ）。", opts:["A. 868MHz、918MHz、2.3GHz","B. 848MHz、915MHz、2.4GHz","C. 868MHz、915MHz、2.4GHz","D. 868MHz、960MHz、2.4GHz"], ans:"C" },
-      { q:"ZigBee 使用了 3 个频段，其中 2450MHz 定义了（ ）个频道。", opts:["A. 1","B. 10","C. 16","D. 20"], ans:"C" },
-      { q:"中国使用的 ZigBee 工作的频段是（ ）。", opts:["A. 848MHz","B. 915MHz","C. 2.4GHz","D. 868/915MHz"], ans:"C" },
-      { q:"在 2.4GHz 的物理层的数据传输速率为（ ）。", opts:["A. 250kb/s","B. 40kb/s","C. 20kb/s","D. 140kb/s"], ans:"A" },
-      { q:"家居系统中负责监控信息和采集数据的是（ ）节点。", opts:["A. 终端","B. 路由","C. 协调器","D. 家庭网关"], ans:"A" },
-      { q:"在 ZigBee 技术的体系结构中，具有信标管理、信道接入、时隙管理、发送确认帧、发送连接及断开连接请求的特征是（ ）层。", opts:["A. 物理层","B. 网络/安全层","C. MAC层","D. 应用框架层"], ans:"C" },
-      { q:"ZigBee 物理层通过射频固件和射频硬件提供一个从（ ）到物理层的无线信道接口。", opts:["A. 网络层","B. 数据链路层","C. MAC层","D. 传输层"], ans:"C" },
-      { q:"新节点加入网络后，其短地址由（ ）分配。", opts:["A. 自己获取","B. 协调器节点","C. 路由器节点","D. 父节点"], ans:"D" },
-      { q:"request 原语是（ ）。", opts:["A. 确认原语","B. 指示原语","C. 响应原语","D. 请求原语"], ans:"D" },
-      { q:"indication 原语是（ ）。", opts:["A. 确认原语","B. 指示原语","C. 响应原语","D. 请求原语"], ans:"B" },
-      { q:"下列在 ZigBee 技术中，各英文缩写与汉语解释对应错误的是（ ）。", opts:["A. FFD：完整功能的设备","B. RFD：简化功能的设备","C. MAC：应用框架层","D. CAP：竞争接入时期"], ans:"C" },
-      { q:"PAN 标识符值为 0xffff，代表的是（ ）。", opts:["A. 以广播传输方式","B. 短的广播地址","C. 长的广播地址","D. 以上都不对"], ans:"A" },
-      { q:"ZigBee 中每个协调器节点最多可连接（ ）个节点。", opts:["A. 255","B. 258","C. 254","D. 126"], ans:"A" },
-      { q:"一个 ZigBee 网络最多可容纳（ ）个节点。", opts:["A. 1024","B. 258","C. 65535","D. 526"], ans:"C" },
-      { q:"ZigBee 不支持的网络拓扑结构是（ ）。", opts:["A. 星状","B. 树状","C. 环型","D. 网状"], ans:"C" }
+        { q: "下面（ ）不是 ZigBee 技术的优点。", opts: ["A. 近距离", "B. 高功耗", "C. 低复杂度", "D. 低数据速率"], ans: "B" },
+        { q: "作为 ZigBee 技术的物理层和媒体访问控制子层的标准协议是（ ）。", opts: ["A. IEEE 802.15.4", "B. IEEE 802.11b", "C. IEEE 802.11a", "D. IEEE 802.12"], ans: "A" },
+        { q: "ZigBee 网络典型的休眠激活的时延是（ ）ms。", opts: ["A. 30", "B. 20", "C. 10", "D. 15"], ans: "D" },
+        { q: "ZigBee 适应的应用场合为（ ）。", opts: ["A. 个人健康监护", "B. 玩具和游戏", "C. 家庭自动化", "D. 上述全部"], ans: "D" },
+        { q: "ZigBee 无线网络技术用于（ ）无线连接。", opts: ["A. 近距离", "B. 远距离", "C. 任意距离", "D. 中远距离"], ans: "A" }
     ];
-    ch3Choices.forEach(item => rawQuestions.push({ chapter:3, type:'选择', text:item.q, options:item.opts, answer:item.ans }));
+    ch3Choices.forEach(item => {
+        questionBank.push({ chapter: 3, type: '选择', text: item.q, options: item.opts, answer: item.ans });
+    });
 
     // ----- 第4章 蓝牙通信技术 -----
     const ch4Fills = [
-      "蓝牙使用______技术，将传输的数据分割成数据包，通过79个指定的蓝牙频道分别传输数据包。每个频道的频宽为______。蓝牙4.0使用______间距，可容纳40个频道。",
-      "蓝牙技术的出现使短距离无线通信成为可能，但其协议______、______、______等特点不太适用于要求低成本、低功耗的工业控制和家庭网络。",
-      "蓝牙技术是一项______技术，它不要求固定的基础设施，且易于安装和设置。",
-      "蓝牙使用称为0.5BT的______的数字频率调制技术实现彼此间的通信。",
-      "一个蓝牙微微网可以连接______台处于活动模式的设备。"
+        "蓝牙使用______技术，将传输的数据分割成数据包，通过79个指定的蓝牙频道分别传输数据包。",
+        "蓝牙技术的出现使短距离无线通信成为可能，但其协议______、______、______等特点不太适用于要求低成本、低功耗的工业控制和家庭网络。",
+        "蓝牙技术是一项______技术，它不要求固定的基础设施，且易于安装和设置。",
+        "蓝牙使用称为0.5BT的______的数字频率调制技术实现彼此间的通信。",
+        "一个蓝牙微微网可以连接______台处于活动模式的设备。"
     ];
-    const ch4FillAns = ["跳频（扩频）；1MHz；2MHz", "复杂度高、传输距离近、节点容量少", "短距离无线通信", "高斯频移键控（GFSK）", "8"];
-    ch4Fills.forEach((q,i) => rawQuestions.push({ chapter:4, type:'填空', text:q, answer:ch4FillAns[i], options:null }));
+    const ch4FillAns = ["跳频（扩频）", "复杂度高、传输距离近、节点容量少", "短距离无线通信", "高斯频移键控（GFSK）", "8"];
+    ch4Fills.forEach((q, i) => questionBank.push({ chapter: 4, type: '填空', text: q, options: null, answer: ch4FillAns[i] }));
 
     const ch4Choices = [
-      { q:"1998年5月，5家著名厂商联合推出蓝牙技术，（ ）公司未参与。", opts:["A. 爱立信","B. 诺基亚","C. 东芝","D. 联想"], ans:"D" },
-      { q:"（ ）不属于蓝牙技术优势。", opts:["A. 全球可用","B. 易于使用","C. 自组织和自愈功能","D. 通用规格"], ans:"D" },
-      { q:"蓝牙关键技术不包含（ ）。", opts:["A. IEEE 802.11b局域网协议","B. 调制方式","C. 跳频技术","D. 网络拓扑结构"], ans:"A" },
-      { q:"家庭网络三部分组成，（ ）多余。", opts:["A. 智能家庭网关","B. 后台维护系统","C. 智能应用终端","D. 家庭内部的通信协议"], ans:"B" },
-      { q:"蓝牙工作频段（ ）。", opts:["A. 2.4GHz","B. 5.0GHz","C. 900MHz","D. 100GHz"], ans:"A" }
+        { q: "1998年5月，5家著名厂商联合推出蓝牙技术，（ ）公司未参与。", opts: ["A. 爱立信", "B. 诺基亚", "C. 东芝", "D. 联想"], ans: "D" },
+        { q: "（ ）不属于蓝牙技术优势。", opts: ["A. 全球可用", "B. 易于使用", "C. 自组织和自愈功能", "D. 通用规格"], ans: "D" },
+        { q: "蓝牙关键技术不包含（ ）。", opts: ["A. IEEE 802.11b局域网协议", "B. 调制方式", "C. 跳频技术", "D. 网络拓扑结构"], ans: "A" },
+        { q: "蓝牙工作频段（ ）。", opts: ["A. 2.4GHz", "B. 5.0GHz", "C. 900MHz", "D. 100GHz"], ans: "A" }
     ];
-    ch4Choices.forEach(item => rawQuestions.push({ chapter:4, type:'选择', text:item.q, options:item.opts, answer:item.ans }));
+    ch4Choices.forEach(item => {
+        questionBank.push({ chapter: 4, type: '选择', text: item.q, options: item.opts, answer: item.ans });
+    });
 
-    // ----- 第5章 RFID通信技术 -----
+    // ----- 第5章 RFID通信技术 (部分) -----
     const ch5Fills = [
-      "让物理对象\"开口说话\"的物联网通信技术是______技术。",
-      "RFID 的英文全称是______。",
-      "EPC 系统由______、射频识别系统、EPC 中间件、对象名称解析服务(ONS)、EPC 信息服务(EPCIS)组成。",
-      "RFID 系统通常由______、______和______三部分组成。",
-      "电子标签又被称为应答器或______。",
-      "电子标签由______和______组成。",
-      "RFID 电子标签的形式一般有______、______和______。",
-      "读写器由______、______和______组成。",
-      "中间件是介于______和后端应用程序之间的独立软件。",
-      "在 RFID 系统中，读写器与电子标签之间能量与数据的传递都是利用耦合元件实现的，RFID 系统中的耦合方式有两种：、。",
-      "RFID 系统按照工作频率分类，可以分为______、______、______和______四类。",
-      "低频 RFID 系统典型的工作频率是______。",
-      "高频 RFID 系统典型的工作频率是______。",
-      "超高频 RFID 系统的识别距离一般为______。",
-      "超高频 RFID 系统数据传输速率高，可达______。",
-      "远场天线主要包括______、______和______。",
-      "在近场天线工作模式下，由 RFID 的线圈天线形成的谐振回路，包括 RFID 天线的线圈电感L，电容C，则其谐振频率 f0 需要满足的条件是______。",
-      "读写器天线电路一般采用______电路。",
-      "电子标签天线电路一般采用______电路。",
-      "根据编码目的的不同，RFID 信号编码可分为______和______。",
-      "______是指把数字基带信号调制到载波的某个参数上，使载波的参数随数字基带信号的变化而变化。",
-      "调幅是指载波的频率和相位不变，载波的______随调制信号的变化而变化。",
-      "RFID 射频前端电路发生并联谐振，谐振频率 f0 需要满足的条件是______。",
-      "RFID 射频前端电路发生串联谐振，谐振频率 f0 需要满足的条件是______。",
-      "电感耦合式系统的工作模型类似于变压器模型。其中变压器的初级和次级线圈分别是______和______。"
+        "让物理对象\"开口说话\"的物联网通信技术是______技术。",
+        "RFID 的英文全称是______。",
+        "EPC 系统由______、射频识别系统、EPC 中间件、对象名称解析服务(ONS)、EPC 信息服务(EPCIS)组成。",
+        "RFID 系统通常由______、______和______三部分组成。",
+        "电子标签又被称为应答器或______。",
+        "电子标签由______和______组成。"
     ];
-    const ch5FillAns = [
-      "RFID", "Radio Frequency Identification", "EPC编码标准", "电子标签、读写器、系统高层", "射频卡",
-      "IC芯片、无线通信天线", "卡片形电子标签、标签类电子标签、植入式电子标签", "射频模块、天线、控制处理模板",
-      "RFID读写器", "电感耦合、电磁反向散射耦合", "低频RFID 系统、高频RFID 系统、超高频RFID 系统、微波RFID 系统",
-      "30~300kHz", "3~30MHz", "3~5m", "几百kbps", "微带贴片天线、偶极子天线、阵列天线",
-      "f0 = 1/(2π√(LC))", "串联谐振", "并联谐振", "信源编码、信道编码", "调制",
-      "幅度", "f0 =1/(2π√(LC))", "f0 =1/(2π√(LC))", "读写器天线线圈、电子标签线圈"
-    ];
-    ch5Fills.forEach((q,i) => rawQuestions.push({ chapter:5, type:'填空', text:q, answer:ch5FillAns[i], options:null }));
+    const ch5FillAns = ["RFID", "Radio Frequency Identification", "EPC编码标准", "电子标签、读写器、系统高层", "射频卡", "IC芯片、无线通信天线"];
+    ch5Fills.forEach((q, i) => questionBank.push({ chapter: 5, type: '填空', text: q, options: null, answer: ch5FillAns[i] }));
 
     const ch5Choices = [
-      { q:"低频段 RFID 系统的工作频率范围是（ ）。", opts:["A. 125~134kHz","B. 13.553~13.567MHz","C. 400~1000MHz","D. 2.45GHz"], ans:"A" },
-      { q:"高频段 RFID 系统的工作频率范围是（ ）。", opts:["A. 125~134kHz","B. 13.553~13.567MHz","C. 400~1000MHz","D. 2.45GHz"], ans:"B" },
-      { q:"超高频段 RFID 系统的工作频率范围是（ ）。", opts:["A. 125~134kHz","B. 13.553~13.567MHz","C. 400~1000MHz","D. 2.45GHz"], ans:"C" },
-      { q:"微波频段 RFID 系统的工作频率范围是（ ）。", opts:["A. 125~134kHz","B. 13.553~13.567MHz","C. 400~1000MHz","D. 2.45GHz"], ans:"D" },
-      { q:"（ ）频段RFID带宽、速率最高，识别距离最远、天线尺寸最小。", opts:["A. <150kHz","B. 433.92MHz 和 860~960MHz","C. 13.56MHz","D. 2.45~5.8GHz"], ans:"D" },
-      { q:"13.56MHz RFID识别距离一般（ ）。", opts:["A. <1cm","B. <10cm","C. <75cm","D. 10m"], ans:"B" },
-      { q:"ISO 14443 / ISO 15693 针对（ ）RFID。", opts:["A. 低频","B. 高频","C. 超高频","D. 微波"], ans:"B" },
-      { q:"ISO 18000-6B属于（ ）频段标准。", opts:["A. 低频","B. 高频","C. 超高频","D. 微波"], ans:"C" },
-      { q:"连接标签天线与数字电路、完成射频整流解调的电路是（ ）。", opts:["A. 天线","B. 逻辑控制单元","C. 射频前端","D. 存储器"], ans:"C" },
-      { q:"读写器中将电信号转换为电磁波发送给标签的部件是（ ）。", opts:["A. 射频模块","B. 天线","C. 读写模块","D. 控制模块"], ans:"B" },
-      { q:"低频/高频RFID天线常用（ ）。", opts:["A. 线圈天线","B. 微带贴片天线","C. 偶极子天线","D. 阵列天线"], ans:"A" },
-      { q:"不属于RFID防碰撞算法的是（ ）。", opts:["A. 纯ALOHA","B. 时隙ALOHA","C. 二进制树形搜索","D. 冒泡算法"], ans:"D" },
-      { q:"对信源输出信号变换称为（ ）。", opts:["A. 信源编码","B. 信道编码","C. 检错编码","D. 纠错编码"], ans:"A" },
-      { q:"对信道编码器输出信号变换称为（ ）。", opts:["A. 信源编码","B. 信道编码","C. 检错编码","D. 纠错编码"], ans:"B" },
-      { q:"RFID自同步信源编码为（ ）。", opts:["A. NR编码","B. 曼彻斯特编码","C. 密勒编码","D. 修正密勒码"], ans:"B" },
-      { q:"幅度变化传递数字信息的调制是（ ）。", opts:["A. 幅移键控ASK","B. 频移键控FSK","C. 相移键控PSK","D. 副载波调制"], ans:"A" },
-      { q:"频率变化传递数字信息的调制是（ ）。", opts:["A. ASK","B. FSK","C. PSK","D. 副载波调制"], ans:"B" },
-      { q:"相位变化传递数字信息的调制是（ ）。", opts:["A. ASK","B. FSK","C. PSK","D. 副载波调制"], ans:"C" },
-      { q:"按时间分配信道容量给多用户的技术是（ ）。", opts:["A. SDMA空分","B. FDMA频分","C. CDMA码分","D. TDMA时分"], ans:"D" }
+        { q: "低频段 RFID 系统的工作频率范围是（ ）。", opts: ["A. 125~134kHz", "B. 13.553~13.567MHz", "C. 400~1000MHz", "D. 2.45GHz"], ans: "A" },
+        { q: "高频段 RFID 系统的工作频率范围是（ ）。", opts: ["A. 125~134kHz", "B. 13.553~13.567MHz", "C. 400~1000MHz", "D. 2.45GHz"], ans: "B" },
+        { q: "超高频段 RFID 系统的工作频率范围是（ ）。", opts: ["A. 125~134kHz", "B. 13.553~13.567MHz", "C. 400~1000MHz", "D. 2.45GHz"], ans: "C" },
+        { q: "微波频段 RFID 系统的工作频率范围是（ ）。", opts: ["A. 125~134kHz", "B. 13.553~13.567MHz", "C. 400~1000MHz", "D. 2.45GHz"], ans: "D" },
+        { q: "（ ）频段RFID带宽、速率最高，识别距离最远、天线尺寸最小。", opts: ["A. <150kHz", "B. 433.92MHz 和 860~960MHz", "C. 13.56MHz", "D. 2.45~5.8GHz"], ans: "D" }
     ];
-    ch5Choices.forEach(item => rawQuestions.push({ chapter:5, type:'选择', text:item.q, options:item.opts, answer:item.ans }));
+    ch5Choices.forEach(item => {
+        questionBank.push({ chapter: 5, type: '选择', text: item.q, options: item.opts, answer: item.ans });
+    });
 
     // ----- 第6章 Wi-Fi通信 -----
     const ch6Fills = [
-      "Wi-Fi 是一种可以将各种终端设备以______方式互相连接的技术。",
-      "Wi-Fi 是一个无线网络通信技术的品牌，由______所持有。",
-      "IEEE 802.11 标准设计独特的 MAC 层，通过协调功能来确定在基本服务集中的移动站在什么时间能______或______。",
-      "OFDM 调制方式包括______。",
-      "Wi-Fi 无线网络包括两种类型的拓扑形式：______和自组网。",
-      "______是无线 AP 的基本工作模式。",
-      "在 Ad-Hoc 模式下，WLAN 设备具有______的通信关系，每个设备既是数据交互的终端也作为数据传输的路由，不需要 AP 的支持。",
-      "______是一种特殊场合下的能够临时快速自动组网的移动通信技术。",
-      "______本身内置无线 AP 的功能。",
-      "SSID 的全称为______。"
+        "Wi-Fi 是一种可以将各种终端设备以______方式互相连接的技术。",
+        "Wi-Fi 是一个无线网络通信技术的品牌，由______所持有。",
+        "IEEE 802.11 标准设计独特的 MAC 层，通过协调功能来确定在基本服务集中的移动站在什么时间能______或______。",
+        "OFDM 调制方式包括______。",
+        "Wi-Fi 无线网络包括两种类型的拓扑形式：______和自组网。"
     ];
-    const ch6FillAns = ["无线", "Wi-Fi联盟", "发送、接收数据", "正交频分复用", "基础架构网", "AP接入点模式", "对等", "Ad-Hoc网络", "无线路由器", "无线路由的ID标识"];
-    ch6Fills.forEach((q,i) => rawQuestions.push({ chapter:6, type:'填空', text:q, answer:ch6FillAns[i], options:null }));
+    const ch6FillAns = ["无线", "Wi-Fi联盟", "发送、接收数据", "正交频分复用", "基础架构网"];
+    ch6Fills.forEach((q, i) => questionBank.push({ chapter: 6, type: '填空', text: q, options: null, answer: ch6FillAns[i] }));
 
     const ch6Choices = [
-      { q:"无线联网技术相对于有线局域网的优势有（ ）。", opts:["A. 可移动性","B. 架设成本高","C. 覆盖范围小","D. 传输速度快"], ans:"A" },
-      { q:"不在2.4GHz频段工作的无线协议是（ ）。", opts:["A. IEEE 802.11","B. IEEE 802.11a","C. IEEE 802.11b","D. IEEE 802.11g"], ans:"B" },
-      { q:"IEEE 802.11 标准在 OSI 模型中的（ ）提供进程间的逻辑通信。", opts:["A. 数据链路层","B. 网络层","C. 传输层","D. 应用层"], ans:"A" },
-      { q:"IEEE 802.11 定义了 3 种帧类型，不包括（ ）。", opts:["A. 数据帧","B. 控制帧","C. 管理帧","D. 码片速率帧"], ans:"D" },
-      { q:"IEEE 802.11 物理层不包括（ ）。", opts:["A. 管理层","B. 逻辑链路控制层","C. 会聚协议层","D. 物理介质依赖子层"], ans:"A" },
-      { q:"关于 IEEE 802.11g 描述正确的是（ ）。", opts:["A. 兼容802.11a","B. 不兼容802.11b","C. 54Mbps采用与11a相同OFDM调制","D. 最高速率与11b一致"], ans:"C" },
-      { q:"AP组网模式不正确的是（ ）。", opts:["A. 接入点模式","B. AP客户端模式","C. 点对点服务器模式","D. 无线中继模式"], ans:"C" },
-      { q:"不会干扰WLAN的设备是（ ）。", opts:["A. 微波炉","B. 蓝牙设备","C. 其他AP","D. GSM手机"], ans:"D" },
-      { q:"一台AP+关联客户端称为一个（ ）。", opts:["A. IBSS","B. BSS","C. ESS","D. AC"], ans:"B" },
-      { q:"两台笔记本直连无线使用（ ）模式。", opts:["A. Ad-Hoc","B. 基础结构","C. 固定基站","D. 漫游"], ans:"A" }
+        { q: "无线联网技术相对于有线局域网的优势有（ ）。", opts: ["A. 可移动性", "B. 架设成本高", "C. 覆盖范围小", "D. 传输速度快"], ans: "A" },
+        { q: "不在2.4GHz频段工作的无线协议是（ ）。", opts: ["A. IEEE 802.11", "B. IEEE 802.11a", "C. IEEE 802.11b", "D. IEEE 802.11g"], ans: "B" },
+        { q: "IEEE 802.11 标准在 OSI 模型中的（ ）提供进程间的逻辑通信。", opts: ["A. 数据链路层", "B. 网络层", "C. 传输层", "D. 应用层"], ans: "A" }
     ];
-    ch6Choices.forEach(item => rawQuestions.push({ chapter:6, type:'选择', text:item.q, options:item.opts, answer:item.ans }));
+    ch6Choices.forEach(item => {
+        questionBank.push({ chapter: 6, type: '选择', text: item.q, options: item.opts, answer: item.ans });
+    });
 
     // ----- 第7章 NB-IoT与LoRa -----
     const ch7Fills = [
-      "中国区域 LoRa 主要运行的频段包括______。",
-      "推动 LoRa 产业链在中国应用和发展的组织机构是______。",
-      "LoRa 提供了一种基于______技术的超远距离无线传输方案。",
-      "LoRa 调制解调器采用了______和前向纠错技术。",
-      "码片速率与标称符号速率之间的比值为______。",
-      "LoRa MAC 协议中 Class A 选项适用于______终端类型。",
-      "LoRa 采用______进行前向错误检测与纠错。",
-      "通过增加信号______可以提高有效数据速率以缩短传输时间。",
-      "实际上 LoRaWAN 指的是______层的组网协议。",
-      "LoRa 组网方式更多地采用______网络结构。",
-      "NB-IoT 的特点包括______、______、 和 。",
-      "NB-IoT 支持______、______和______三种部署方式。",
-      "NB-IoT 的系统带宽为______。",
-      "NB-IoT 的系统上下行有效传输带宽为______。",
-      "NB-IoT 无线接入网由一个或多个______组成。",
-      "NB-IoT EPS 主要由______、______和______三部分组成。",
-      "NB-IoT 的接入网和核心网之间通过______接口进行连接。",
-      "NB-IoT 的 MME 主要负责______处理部分。",
-      "在同样的频段下，NB-IoT 相比现有移动通信网络具有______增益。",
-      "NB-IoT 的 eNB 基站之间通过______接口进行直接互联。"
+        "中国区域 LoRa 主要运行的频段包括______。",
+        "推动 LoRa 产业链在中国应用和发展的组织机构是______。",
+        "LoRa 提供了一种基于______技术的超远距离无线传输方案。",
+        "LoRa 调制解调器采用了______和前向纠错技术。",
+        "码片速率与标称符号速率之间的比值为______。"
     ];
-    const ch7FillAns = [
-      "433MHz 470~510MHz", "中国LoRa应用联盟（CLAA）", "线性扩频", "扩频调制", "扩频因子",
-      "低功耗", "循环纠错编码", "带宽", "MAC", "星形",
-      "广覆盖、低功耗、大连接、低成本", "独立部署、保护频段部署、频段带内部署", "200kHz", "180kHz",
-      "基站（eNB）", "演进分组核心（EPC）网 基站 UE", "S1", "信令", "20dB", "X2"
-    ];
-    ch7Fills.forEach((q,i) => rawQuestions.push({ chapter:7, type:'填空', text:q, answer:ch7FillAns[i], options:null }));
+    const ch7FillAns = ["433MHz 470~510MHz", "中国LoRa应用联盟（CLAA）", "线性扩频", "扩频调制", "扩频因子"];
+    ch7Fills.forEach((q, i) => questionBank.push({ chapter: 7, type: '填空', text: q, options: null, answer: ch7FillAns[i] }));
 
     const ch7Choices = [
-      { q:"LoRa 可达到的最远通信距离是（ ）。", opts:["A. 5km","B. 10km","C. 15km","D. 20km"], ans:"D" },
-      { q:"下列属于 LoRa 通信技术特点的是（ ）。", opts:["A. 网络容量小","B. 功耗大","C. 需要向运营商付费","D. 抗干扰能力强"], ans:"D" },
-      { q:"LoRa 实现远距离传输的关键技术是（ ）。", opts:["A. 扩频技术","B. 纠错技术","C. 差错检验","D. 调制技术"], ans:"A" },
-      { q:"LoRaWAN 的网络结构主要采用（ ）。", opts:["A. 总线结构","B. 树形结构","C. 星形结构","D. Mesh 结构"], ans:"C" },
-      { q:"LoRa 通信技术用于（ ）无线连接。", opts:["A. 近距离","B. 远距离","C. 任意距离","D. 中远距离"], ans:"B" },
-      { q:"NB-IoT相比现有蜂窝网络20dB增益，对应特点（ ）。", opts:["A. 低功耗","B. 广覆盖","C. 低成本","D. 大连接"], ans:"B" },
-      { q:"单小区支持5万终端连接，体现NB-IoT（ ）。", opts:["A. 低功耗","B. 广覆盖","C. 低成本","D. 大连接"], ans:"D" },
-      { q:"NB-IoT终端待机最长10年，体现（ ）。", opts:["A. 低功耗","B. 广覆盖","C. 低成本","D. 大连接"], ans:"A" },
-      { q:"利用LTE保护带宽部署NB-IoT属于（ ）。", opts:["A. 独立部署","B. 保护频段部署","C. 频段带内部署","D. 联合部署"], ans:"B" },
-      { q:"全新空闲频谱单独部署NB-IoT属于（ ）。", opts:["A. 独立部署","B. 保护频段部署","C. 频段带内部署","D. 联合部署"], ans:"A" }
+        { q: "LoRa 可达到的最远通信距离是（ ）。", opts: ["A. 5km", "B. 10km", "C. 15km", "D. 20km"], ans: "D" },
+        { q: "下列属于 LoRa 通信技术特点的是（ ）。", opts: ["A. 网络容量小", "B. 功耗大", "C. 需要向运营商付费", "D. 抗干扰能力强"], ans: "D" },
+        { q: "LoRa 实现远距离传输的关键技术是（ ）。", opts: ["A. 扩频技术", "B. 纠错技术", "C. 差错检验", "D. 调制技术"], ans: "A" },
+        { q: "NB-IoT相比现有蜂窝网络20dB增益，对应特点（ ）。", opts: ["A. 低功耗", "B. 广覆盖", "C. 低成本", "D. 大连接"], ans: "B" },
+        { q: "单小区支持5万终端连接，体现NB-IoT（ ）。", opts: ["A. 低功耗", "B. 广覆盖", "C. 低成本", "D. 大连接"], ans: "D" }
     ];
-    ch7Choices.forEach(item => rawQuestions.push({ chapter:7, type:'选择', text:item.q, options:item.opts, answer:item.ans }));
+    ch7Choices.forEach(item => {
+        questionBank.push({ chapter: 7, type: '选择', text: item.q, options: item.opts, answer: item.ans });
+    });
 
     // ----- 第8章 移动通信技术 -----
     const ch8Fills = [
-      "OFDM 即______，是一种能够充分利用频谱资源的多载波传输方式。",
-      "______是指移动用户的终端设备，可以分为车载型、便携型和手持型。其中手持型俗称\"手机\"。它由______控制，与基站间建立双向的无线电话电路并进行通话。",
-      "小区制是将______划分为若干小无线区，每个小无线区域分别设置一个基站，负责本区的______的联络和控制。",
-      "如果采用全向天线对平面服务区作覆盖，用______代替圆作为无线小区的形状，可以得到更好的无缝覆盖效果。",
-      "CDMA 是指一种______数字式通信技术，通过独特的代码序列建立信道，可用于第二代和第三代移动通信技术中的任何一种协议。",
-      "第四代移动通信技术发展到今天，包括______和______两种制式。"
+        "OFDM 即______，是一种能够充分利用频谱资源的多载波传输方式。",
+        "______是指移动用户的终端设备，可以分为车载型、便携型和手持型。",
+        "小区制是将______划分为若干小无线区，每个小无线区域分别设置一个基站。",
+        "如果采用全向天线对平面服务区作覆盖，用______代替圆作为无线小区的形状。",
+        "CDMA 是指一种______数字式通信技术。"
     ];
-    const ch8FillAns = [
-      "正交频分复用", "移动台（MS）；移动用户", "整个服务区；移动通信", "圆内接正多边形", "扩频多址", "TD-LTE；FDD-LTE"
-    ];
-    ch8Fills.forEach((q,i) => rawQuestions.push({ chapter:8, type:'填空', text:q, answer:ch8FillAns[i], options:null }));
+    const ch8FillAns = ["正交频分复用", "移动台（MS）", "整个服务区", "圆内接正多边形", "扩频多址"];
+    ch8Fills.forEach((q, i) => questionBank.push({ chapter: 8, type: '填空', text: q, options: null, answer: ch8FillAns[i] }));
 
     const ch8Choices = [
-      { q:"（ ）是无线电台站的一种形式，是指在一定的无线电覆盖区中，通过移动通信交换中心与移动电话终端之间进行信息传递的无线电收发电台。", opts:["A. 基站","B. 移动台","C. MSC","D. 天馈系统"], ans:"A" },
-      { q:"大区制是指在一个服务区内（ ）基站，负责移动通信的联络和控制。", opts:["A. 有多","B. 只有两个","C. 最多两个","D. 只有一个"], ans:"D" },
-      { q:"这种组网方式的容量比较（ ），也被称为集群移动通信。", opts:["A. 大","B. 小","C. 固定","D. 随机"], ans:"B" },
-      { q:"（ ）是区别移动用户的标志，存储在 SIM 卡中，可用于区别移动用户的有效信息。", opts:["A. IMEI","B. IMSI","C. MSISDN","D. MSRN"], ans:"B" },
-      { q:"采用（ ）技术可以提高第三代移动通信系统的容量及服务质量。", opts:["A. 智能天线阵","B. 小区制","C. 初始同步","D. 多用户检测"], ans:"A" }
+        { q: "（ ）是无线电台站的一种形式，是指在一定的无线电覆盖区中，通过移动通信交换中心与移动电话终端之间进行信息传递的无线电收发电台。", opts: ["A. 基站", "B. 移动台", "C. MSC", "D. 天馈系统"], ans: "A" },
+        { q: "大区制是指在一个服务区内（ ）基站，负责移动通信的联络和控制。", opts: ["A. 有多", "B. 只有两个", "C. 最多两个", "D. 只有一个"], ans: "D" },
+        { q: "（ ）是区别移动用户的标志，存储在 SIM 卡中。", opts: ["A. IMEI", "B. IMSI", "C. MSISDN", "D. MSRN"], ans: "B" }
     ];
-    ch8Choices.forEach(item => rawQuestions.push({ chapter:8, type:'选择', text:item.q, options:item.opts, answer:item.ans }));
-
-    // ---- 数据预处理：每个题目加入唯一id ----
-    const questions = rawQuestions.map((q, idx) => {
-      return { ...q, id: idx };
+    ch8Choices.forEach(item => {
+        questionBank.push({ chapter: 8, type: '选择', text: item.q, options: item.opts, answer: item.ans });
     });
 
-    // ---- 状态 ----
-    let currentFilter = 'all';
-    // 存储每个题目的答案显示状态 (boolean)
-    const showMap = new Map(); // key: question.id, value: boolean
+    // 给每道题分配唯一ID
+    questionBank.forEach((q, idx) => q.id = idx);
 
-    // ---- DOM 元素 ----
+    // ============================================================
+    // 2. 应用状态
+    // ============================================================
+    let currentMode = 'full';       // 'full' | 'random' | 'card'
+    let currentQuestions = [];      // 当前显示的题目列表
+    let cardIndex = 0;             // 闯关模式当前题目索引
+    let cardCorrectCount = 0;
+    let cardWrongCount = 0;
+    // 存储每道题用户的选择/输入 (用于完整/随机模式)
+    const userAnswers = new Map(); // key: q.id, value: 用户答案字符串
+
+    // ============================================================
+    // 3. DOM 引用 & 渲染
+    // ============================================================
     const container = document.getElementById('questionList');
-    const chapterFilter = document.getElementById('chapterFilter');
-    const resetBtn = document.getElementById('resetAllBtn');
+    const totalQCount = document.getElementById('totalQCount');
     const progressText = document.getElementById('progressText');
     const progressFill = document.getElementById('progressFill');
     const shownCountSpan = document.getElementById('shownCount');
+    const cardIndicator = document.getElementById('cardIndicator');
+    const cardCorrectSpan = document.getElementById('cardCorrect');
+    const cardWrongSpan = document.getElementById('cardWrong');
+    const cardScoreSpan = document.getElementById('cardScore');
 
-    // ---- 渲染 ----
-    function render() {
-      const filtered = questions.filter(q => {
-        if (currentFilter === 'all') return true;
-        return q.chapter === parseInt(currentFilter, 10);
-      });
+    // 模式按钮
+    const modeBtns = document.querySelectorAll('.mode-btn');
 
-      // 更新统计
-      const total = filtered.length;
-      const shown = filtered.filter(q => showMap.get(q.id) === true).length;
-      shownCountSpan.textContent = total;
-      progressText.textContent = `${shown} / ${total}`;
-      const pct = total === 0 ? 0 : Math.round((shown / total) * 100);
-      progressFill.style.width = pct + '%';
-
-      if (total === 0) {
-        container.innerHTML = `<div class="empty-state">📭 当前章节暂无题目</div>`;
-        return;
-      }
-
-      let html = '';
-      filtered.forEach((q, idx) => {
-        const isShowing = showMap.get(q.id) === true;
-        const answerDisplay = isShowing ? '' : 'hidden';
-        const btnText = isShowing ? '🙈 隐藏答案' : '👀 显示答案';
-        const chapterLabel = `第${q.chapter}章`;
-        const typeLabel = q.type === '填空' ? '📝 填空' : '🔘 选择';
-
-        // 构建题目文本 (填空用占位符)
-        let questionHtml = q.text;
-        if (q.type === '填空') {
-          // 将______ 替换为带下划线的占位符样式
-          questionHtml = q.text.replace(/______+/g, '______').replace(/______/g, '<span class="fill-placeholder">______</span>');
-        }
-
-        // 选项渲染
-        let optionsHtml = '';
-        if (q.options && q.options.length) {
-          optionsHtml = `<div class="options">`;
-          q.options.forEach(opt => {
-            const label = opt.charAt(0);
-            optionsHtml += `<div class="option-item"><span class="opt-label">${label}</span> ${opt.substring(2)}</div>`;
-          });
-          optionsHtml += `</div>`;
-        }
-
-        html += `
-          <div class="question-card" data-qid="${q.id}">
-            <div class="q-header">
-              <span class="q-number">#${idx+1}</span>
-              <span class="q-chapter">${chapterLabel}</span>
-              <span class="q-type">${typeLabel}</span>
-            </div>
-            <div class="q-text">${questionHtml}</div>
-            ${optionsHtml}
-            <div class="answer-area">
-              <button class="answer-btn ${isShowing ? 'showing' : ''}" data-id="${q.id}">${btnText}</button>
-              <span class="answer-text ${answerDisplay}" data-id="${q.id}">✅ ${q.answer}</span>
-            </div>
-            <div class="q-footer"></div>
-          </div>
-        `;
-      });
-
-      container.innerHTML = html;
-
-      // 绑定按钮事件
-      document.querySelectorAll('.answer-btn').forEach(btn => {
-        btn.addEventListener('click', function(e) {
-          const id = parseInt(this.dataset.id, 10);
-          toggleAnswer(id);
+    // 更新统计
+    function updateStats() {
+        const total = currentQuestions.length;
+        totalQCount.textContent = questionBank.length;
+        shownCountSpan.textContent = total;
+        // 计算已作答数量
+        let answered = 0;
+        currentQuestions.forEach(q => {
+            const val = userAnswers.get(q.id);
+            if (val && val.trim() !== '') answered++;
         });
-      });
+        progressText.textContent = `${answered} / ${total}`;
+        const pct = total === 0 ? 0 : Math.round((answered / total) * 100);
+        progressFill.style.width = pct + '%';
     }
 
-    // ---- 切换答案显示 ----
-    function toggleAnswer(id) {
-      const current = showMap.get(id) || false;
-      showMap.set(id, !current);
-      render();
+    // 判断答案是否正确
+    function isAnswerCorrect(q, userAns) {
+        if (!userAns) return false;
+        // 标准化比较：去除首尾空格，统一大小写
+        const normalize = s => s.trim().toLowerCase();
+        const correct = normalize(q.answer);
+        const input = normalize(userAns);
+        if (q.type === '选择') {
+            return input === correct || input === q.answer.trim(); // 兼容A/B/C/D
+        }
+        // 填空：支持多个答案用顿号/逗号分隔
+        const parts = q.answer.split(/[,，、]/).map(s => normalize(s));
+        return parts.some(p => input === p);
     }
 
-    // ---- 重置所有答案 ----
-    function resetAll() {
-      // 把所有题目状态设为 false
-      questions.forEach(q => showMap.set(q.id, false));
-      render();
+    // 获取用户对某道题的答案
+    function getUserAnswer(q) {
+        return userAnswers.get(q.id) || '';
     }
 
-    // ---- 筛选切换 ----
-    chapterFilter.addEventListener('change', function() {
-      currentFilter = this.value;
-      render();
+    // 设置用户答案
+    function setUserAnswer(q, val) {
+        userAnswers.set(q.id, val);
+        updateStats();
+    }
+
+    // ----- 渲染题目列表 -----
+    function render() {
+        if (currentQuestions.length === 0) {
+            container.innerHTML = `<div class="empty-state">📭 当前暂无题目，请切换模式</div>`;
+            return;
+        }
+
+        let html = '';
+        currentQuestions.forEach((q, idx) => {
+            const userAns = getUserAnswer(q);
+            const isCorrect = isAnswerCorrect(q, userAns);
+            const hasAnswered = userAns && userAns.trim() !== '';
+
+            // 选择题渲染
+            let optionsHtml = '';
+            if (q.type === '选择' && q.options) {
+                optionsHtml = `<div class="options">`;
+                q.options.forEach(opt => {
+                    const letter = opt.charAt(0);
+                    const isSelected = userAns === letter || userAns === opt.substring(2);
+                    let cls = 'option-item';
+                    if (hasAnswered) {
+                        if (isSelected && isCorrect) cls += ' correct';
+                        else if (isSelected && !isCorrect) cls += ' wrong';
+                        else if (!isSelected && isCorrect) cls += ' correct';
+                    } else if (isSelected) {
+                        cls += ' selected';
+                    }
+                    optionsHtml += `
+                        <div class="${cls}" data-qid="${q.id}" data-value="${letter}">
+                            <span class="opt-label">${letter}</span> ${opt.substring(2)}
+                        </div>
+                    `;
+                });
+                optionsHtml += `</div>`;
+            }
+
+            // 填空输入
+            let fillHtml = '';
+            if (q.type === '填空') {
+                let inputCls = 'fill-input';
+                if (hasAnswered) {
+                    inputCls += isCorrect ? ' correct' : ' wrong';
+                }
+                fillHtml = `
+                    <input class="${inputCls}" type="text" placeholder="输入答案..." 
+                           data-qid="${q.id}" value="${userAns || ''}">
+                `;
+            }
+
+            // 反馈
+            let feedbackHtml = '';
+            if (hasAnswered) {
+                const fbCls = isCorrect ? 'correct' : 'wrong';
+                const fbMsg = isCorrect ? '✅ 回答正确！' : '❌ 回答错误';
+                feedbackHtml = `
+                    <div class="feedback show ${fbCls}">
+                        ${fbMsg} 正确答案：<span class="answer-reveal">${q.answer}</span>
+                    </div>
+                `;
+            } else {
+                feedbackHtml = `<div class="feedback"></div>`;
+            }
+
+            // 题目标题
+            let questionDisplay = q.text;
+            if (q.type === '填空') {
+                questionDisplay = q.text.replace(/______+/g, '______').replace(/______/g, '<span class="fill-placeholder">______</span>');
+            }
+
+            html += `
+                <div class="question-card" data-qid="${q.id}">
+                    <div class="q-header">
+                        <span class="q-number">#${idx+1}</span>
+                        <span class="q-chapter">第${q.chapter}章</span>
+                        <span class="q-type">${q.type === '填空' ? '📝 填空' : '🔘 选择'}</span>
+                    </div>
+                    <div class="q-text">${questionDisplay}</div>
+                    ${optionsHtml}
+                    ${fillHtml}
+                    ${feedbackHtml}
+                </div>
+            `;
+        });
+
+        container.innerHTML = html;
+
+        // ---- 绑定事件 ----
+        // 选择题点击
+        document.querySelectorAll('.option-item').forEach(el => {
+            el.addEventListener('click', function() {
+                const qid = parseInt(this.dataset.qid, 10);
+                const val = this.dataset.value;
+                const q = currentQuestions.find(q => q.id === qid);
+                if (!q) return;
+                // 如果已经回答正确，在完整/随机模式下允许修改，闯关模式不允许修改
+                if (currentMode === 'card') {
+                    const existing = getUserAnswer(q);
+                    if (existing && existing.trim() !== '') return;
+                }
+                setUserAnswer(q, val);
+                // 闯关模式下自动进入下一题
+                if (currentMode === 'card') {
+                    const correct = isAnswerCorrect(q, val);
+                    if (correct) cardCorrectCount++;
+                    else cardWrongCount++;
+                    updateCardIndicator();
+                    // 延迟进入下一题
+                    setTimeout(() => {
+                        if (cardIndex < currentQuestions.length - 1) {
+                            cardIndex++;
+                            render();
+                        } else {
+                            // 闯关完成
+                            render();
+                        }
+                    }, 600);
+                } else {
+                    render();
+                }
+            });
+        });
+
+        // 填空输入
+        document.querySelectorAll('.fill-input').forEach(inp => {
+            inp.addEventListener('input', function() {
+                const qid = parseInt(this.dataset.qid, 10);
+                const val = this.value;
+                const q = currentQuestions.find(q => q.id === qid);
+                if (!q) return;
+                if (currentMode === 'card') {
+                    const existing = getUserAnswer(q);
+                    if (existing && existing.trim() !== '') return;
+                }
+                setUserAnswer(q, val);
+            });
+            inp.addEventListener('blur', function() {
+                const qid = parseInt(this.dataset.qid, 10);
+                const q = currentQuestions.find(q => q.id === qid);
+                if (!q) return;
+                const val = this.value;
+                // 闯关模式自动判断
+                if (currentMode === 'card' && val.trim() !== '') {
+                    const existing = getUserAnswer(q);
+                    if (existing && existing.trim() !== '') return;
+                    const correct = isAnswerCorrect(q, val);
+                    if (correct) cardCorrectCount++;
+                    else cardWrongCount++;
+                    updateCardIndicator();
+                    setTimeout(() => {
+                        if (cardIndex < currentQuestions.length - 1) {
+                            cardIndex++;
+                            render();
+                        } else {
+                            render();
+                        }
+                    }, 600);
+                } else {
+                    render();
+                }
+            });
+        });
+
+        // 更新统计和闯关指示器
+        updateStats();
+        if (currentMode === 'card') {
+            cardIndicator.style.display = 'flex';
+            updateCardIndicator();
+        } else {
+            cardIndicator.style.display = 'none';
+        }
+    }
+
+    // 更新闯关指示器
+    function updateCardIndicator() {
+        const total = cardCorrectCount + cardWrongCount;
+        const pct = total === 0 ? 0 : Math.round((cardCorrectCount / total) * 100);
+        cardCorrectSpan.textContent = cardCorrectCount;
+        cardWrongSpan.textContent = cardWrongCount;
+        cardScoreSpan.textContent = pct;
+    }
+
+    // ----- 切换模式 -----
+    function switchMode(mode) {
+        currentMode = mode;
+        // 重置闯关状态
+        cardIndex = 0;
+        cardCorrectCount = 0;
+        cardWrongCount = 0;
+        userAnswers.clear();
+
+        // 更新按钮样式
+        modeBtns.forEach(btn => {
+            btn.classList.toggle('active', btn.dataset.mode === mode);
+        });
+
+        // 生成题目列表
+        if (mode === 'full') {
+            currentQuestions = [...questionBank];
+        } else if (mode === 'random') {
+            const shuffled = [...questionBank];
+            for (let i = shuffled.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+            }
+            currentQuestions = shuffled.slice(0, Math.min(30, shuffled.length));
+        } else if (mode === 'card') {
+            // 闯关模式：使用全部题目，打乱顺序
+            const shuffled = [...questionBank];
+            for (let i = shuffled.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+            }
+            currentQuestions = shuffled;
+            cardIndex = 0;
+        }
+
+        render();
+    }
+
+    // ============================================================
+    // 4. 初始化
+    // ============================================================
+    // 设置模式按钮事件
+    modeBtns.forEach(btn => {
+        btn.addEventListener('click', function() {
+            switchMode(this.dataset.mode);
+        });
     });
 
-    resetBtn.addEventListener('click', resetAll);
-
-    // ---- 初始化 ----
-    // 默认全部不显示答案
-    questions.forEach(q => showMap.set(q.id, false));
-    render();
-  })();
+    // 默认加载完整模式
+    switchMode('full');
 </script>
 </body>
 </html>

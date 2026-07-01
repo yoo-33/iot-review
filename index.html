@@ -11,6 +11,8 @@
         .header { background: linear-gradient(145deg, #0b2a4a, #1b3e62); color: white; padding: 20px 24px; border-radius: 28px; box-shadow: 0 10px 20px rgba(0,20,40,0.25); margin-bottom: 20px; }
         .header h1 { font-weight: 600; font-size: 1.8rem; letter-spacing: 0.5px; display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
         .header h1 small { font-size: 1rem; font-weight: 400; opacity: 0.85; margin-left: 6px; }
+        /* 版本标识 - 醒目 */
+        .version-tag { background: #ffb347; color: #0b2a4a; font-size: 0.8rem; font-weight: 700; padding: 2px 12px; border-radius: 30px; margin-left: 12px; letter-spacing: 0.5px; }
         .header .meta { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; margin-top: 12px; font-size: 0.95rem; background: rgba(255,255,255,0.08); padding: 10px 14px; border-radius: 40px; }
         .header .meta .badge { background: #ffb347; color: #1e2f3f; padding: 0 14px; border-radius: 30px; font-weight: 600; font-size: 0.85rem; line-height: 1.8; }
         .progress-bar { width: 100%; height: 6px; background: rgba(255,255,255,0.2); border-radius: 10px; margin-top: 12px; overflow: hidden; }
@@ -52,7 +54,10 @@
 <body>
 <div class="app" id="app">
     <header class="header">
-        <h1>📡 物联网通信 <small>全题库 · 刷题闯关</small></h1>
+        <h1>
+            📡 物联网通信 <small>全题库 · 刷题闯关</small>
+            <span class="version-tag">✅ v2.0 已更新</span> <!-- ★★★ 这是版本标识 ★★★ -->
+        </h1>
         <div class="meta">
             <span>📚 第1-8章 · 共 <span id="totalQCount">0</span> 题</span>
             <span class="badge" id="progressText">0 / 0</span>
@@ -97,7 +102,7 @@
     const ch2Choices = [{ q: "（ ）代表消息的信号参量取值连续。", opts: ["A. 数字信号", "B. 调制信号", "C. 模拟信号", "D. 解调信号"], ans: "C" },{ q: "（ ）是采用频谱搬移的办法使不同信号分别占据不同的频带进行传输的。", opts: ["A. 频分复用", "B. 时分复用", "C. 码分复用", "D. 波分复用"], ans: "A" },{ q: "将代表信息的数字信号码元序列以成组的方式在两条或两条以上的并行信道上同时传输的方式称为（ ）。", opts: ["A. 串行传输", "B. 同步传输", "C. 并行传输", "D. 异步传输"], ans: "C" },{ q: "将数字信号码元序列一个码元接一个码元地在一条信道上传输的方式称为（ ）。", opts: ["A. 串行传输", "B. 同步传输", "C. 并行传输", "D. 异步传输"], ans: "A" },{ q: "（ ）通信是指通信双方都能收发消息，但不能同时收发的工作方式。", opts: ["A. 随机", "B. 单工", "C. 全双工", "D. 半双工"], ans: "D" }];
     ch2Choices.forEach(item => questionBank.push({ chapter: 2, type: '选择', text: item.q, options: item.opts, answer: item.ans }));
 
-    // ----- 第3章 ZigBee通信技术 (为节省篇幅，已包含全部题目) -----
+    // ----- 第3章 ZigBee通信技术 -----
     const ch3Fills = ["节点的网络深度是指从节点到根节点协调器的______。","网络层管理实体提供管理服务是允许一个应用程序与______相互作用。","ZigBee 是一种开放式的基于______协议的无线个人局域网标准。","ZigBee 采用了______的碰撞避免机制，以提高系统的兼容性。","节点的______标识节点在网络拓扑图中的层次位置。","ZigBee 技术的安全性高，其加密技术采用了______算法。","ZigBee 网络典型的搜索设备时延为______ms。","ZigBee 协议栈共包括四个层次，分别为______、______、______和应用层。","ZigBee 协议栈的物理层和______由 IEEE 802.15.4 标准定义。","ZigBee 协议栈的网络层和应用层标准由______制定。","ZigBee 协议栈的每个协议层都有一个______和管理实体。","物理层管理实体的英文缩写为______。","IEEE 802.15.4 有两个物理层，运行在两个不同的频率范围，分别为______MHz 和 2.4GHz。","ZigBee 使用的三个频段共定义了______个物理信道。","父节点会为第一个与它关联的路由器节点分配比自己大______的地址。","节点存储的数据结构有路由表、______和邻居节点列表。","IEEE 802 系列标准把数据链路层分成______和媒体访问控制子层。","当协调器建立一个新的网络后，首先将自己的 16 位网络地址初始化为 0，网络深度初始化为______。","当一个路由器节点的 C_skip(d) 为______时，它就不再具备为子节点分配地址的能力。","应用层的主要功能包括______、在绑定的设备之间传送消息。","应用层由三部分构成，分别是应用支持子层(APS)、厂商定义的应用对象(AF)和______。","ZigBee 网络中的应用框架是为驻扎在 ZigBee 设备中的应用对象提供活动的环境，最多可以定义______个相对独立的应用程序对象。","ZigBee 协议按照开放系统互联的 7 层模型将协议分成了一系列的层结构，各层之间通过相应的______来提供服务。","ZigBee 协议为了实现层与层之间的关联，采用了称为服务______的操作。","ZigBee 原语有四种类型，分别是______、指示原语、响应原语和确认原语。","RFD 通常只能用作 ZigBee 网络中的______设备。","ZigBee 网络中包括两种无线设备：______和精简功能设备。","ZigBee 网络中的每个节点都有一个______和一个 64 位 IEEE 扩展地址。","ZigBee 网络中有三种类型的节点，分别是______、______和 ZigBee 终端节点。","ZigBee 网络中 16 位网络地址是在节点加入网络时由______动态分配，仅用于路由机制和网络中的数据传输。"];
     const ch3FillAns = ["最短跳数", "协议栈", "IEEE 802.15.4", "CSMA-CA", "网络深度", "AES-128", "30","物理层、数据链路层、网络层", "MAC层（数据链路层）", "ZigBee联盟", "数据实体", "PLME","868/915", "27", "1", "路由发现表", "逻辑链路控制子层", "0", "0","绑定管理", "ZigBee设备对象（ZDO）", "240", "接口", "原语","请求原语", "终端", "全功能设备", "16位网络短地址","ZigBee 协调器节点、 ZigBee 路由器节点", "父节点"];
     ch3Fills.forEach((q, i) => questionBank.push({ chapter: 3, type: '填空', text: q, options: null, answer: ch3FillAns[i] }));
@@ -111,7 +116,7 @@
     const ch4Choices = [{ q: "1998年5月，5家著名厂商联合推出蓝牙技术，（ ）公司未参与。", opts: ["A. 爱立信", "B. 诺基亚", "C. 东芝", "D. 联想"], ans: "D" },{ q: "（ ）不属于蓝牙技术优势。", opts: ["A. 全球可用", "B. 易于使用", "C. 自组织和自愈功能", "D. 通用规格"], ans: "D" },{ q: "蓝牙关键技术不包含（ ）。", opts: ["A. IEEE 802.11b局域网协议", "B. 调制方式", "C. 跳频技术", "D. 网络拓扑结构"], ans: "A" },{ q: "家庭网络三部分组成，（ ）多余。", opts: ["A. 智能家庭网关", "B. 后台维护系统", "C. 智能应用终端", "D. 家庭内部的通信协议"], ans: "B" },{ q: "蓝牙工作频段（ ）。", opts: ["A. 2.4GHz", "B. 5.0GHz", "C. 900MHz", "D. 100GHz"], ans: "A" }];
     ch4Choices.forEach(item => questionBank.push({ chapter: 4, type: '选择', text: item.q, options: item.opts, answer: item.ans }));
 
-    // ----- 第5章 RFID通信技术 (全部题目) -----
+    // ----- 第5章 RFID通信技术 -----
     const ch5Fills = ["让物理对象\"开口说话\"的物联网通信技术是______技术。","RFID 的英文全称是______。","EPC 系统由______、射频识别系统、EPC 中间件、对象名称解析服务(ONS)、EPC 信息服务(EPCIS)组成。","RFID 系统通常由______、______和______三部分组成。","电子标签又被称为应答器或______。","电子标签由______和______组成。","RFID 电子标签的形式一般有______、______和______。","读写器由______、______和______组成。","中间件是介于______和后端应用程序之间的独立软件。","在 RFID 系统中，读写器与电子标签之间能量与数据的传递都是利用耦合元件实现的，RFID 系统中的耦合方式有两种：、。","RFID 系统按照工作频率分类，可以分为______、______、______和______四类。","低频 RFID 系统典型的工作频率是______。","高频 RFID 系统典型的工作频率是______。","超高频 RFID 系统的识别距离一般为______。","超高频 RFID 系统数据传输速率高，可达______。","远场天线主要包括______、______和______。","在近场天线工作模式下，由 RFID 的线圈天线形成的谐振回路，包括 RFID 天线的线圈电感L，电容C，则其谐振频率 f0 需要满足的条件是______。","读写器天线电路一般采用______电路。","电子标签天线电路一般采用______电路。","根据编码目的的不同，RFID 信号编码可分为______和______。","______是指把数字基带信号调制到载波的某个参数上，使载波的参数随数字基带信号的变化而变化。","调幅是指载波的频率和相位不变，载波的______随调制信号的变化而变化。","RFID 射频前端电路发生并联谐振，谐振频率 f0 需要满足的条件是______。","RFID 射频前端电路发生串联谐振，谐振频率 f0 需要满足的条件是______。","电感耦合式系统的工作模型类似于变压器模型。其中变压器的初级和次级线圈分别是______和______。"];
     const ch5FillAns = ["RFID", "Radio Frequency Identification", "EPC编码标准", "电子标签、读写器、系统高层", "射频卡","IC芯片、无线通信天线", "卡片形电子标签、标签类电子标签、植入式电子标签", "射频模块、天线、控制处理模板","RFID读写器", "电感耦合、电磁反向散射耦合", "低频RFID 系统、高频RFID 系统、超高频RFID 系统、微波RFID 系统","30~300kHz", "3~30MHz", "3~5m", "几百kbps", "微带贴片天线、偶极子天线、阵列天线","f0 = 1/(2π√(LC))", "串联谐振", "并联谐振", "信源编码、信道编码", "调制","幅度", "f0 =1/(2π√(LC))", "f0 =1/(2π√(LC))", "读写器天线线圈、电子标签线圈"];
     ch5Fills.forEach((q, i) => questionBank.push({ chapter: 5, type: '填空', text: q, options: null, answer: ch5FillAns[i] }));
@@ -140,13 +145,13 @@
     ch8Choices.forEach(item => questionBank.push({ chapter: 8, type: '选择', text: item.q, options: item.opts, answer: item.ans }));
 
     // ============================================================
-    // 2. 核心逻辑：所有模式下都显示正确答案
+    // 2. 核心逻辑：所有模式下都显示正确答案 + 版本标识
     // ============================================================
     let currentMode = 'full';
     let currentQuestions = [];
     let cardCorrectCount = 0;
     let cardWrongCount = 0;
-    const userAnswers = new Map(); // key: question.id, value: 用户答案
+    const userAnswers = new Map();
 
     const container = document.getElementById('questionList');
     const totalQCount = document.getElementById('totalQCount');
@@ -179,7 +184,6 @@
         if (q.type === '选择') {
             return input === correct || input === q.answer.trim().toLowerCase();
         }
-        // 填空：支持多个答案（用逗号、顿号分隔）
         const parts = q.answer.split(/[,，、]/).map(s => normalize(s));
         return parts.some(p => input === p);
     }
@@ -196,7 +200,6 @@
             const isCorrect = isAnswerCorrect(q, userAns);
             const hasAnswered = userAns.trim() !== '';
 
-            // --- 生成选项 ---
             let optionsHtml = '';
             if (q.type === '选择' && q.options) {
                 optionsHtml = `<div class="options">`;
@@ -207,7 +210,7 @@
                     if (hasAnswered) {
                         if (isSelected && isCorrect) cls += ' correct';
                         else if (isSelected && !isCorrect) cls += ' wrong';
-                        else if (!isSelected && isCorrect) cls += ' correct'; // 高亮正确答案
+                        else if (!isSelected && isCorrect) cls += ' correct';
                     } else if (isSelected) {
                         cls += ' selected';
                     }
@@ -216,7 +219,6 @@
                 optionsHtml += `</div>`;
             }
 
-            // --- 生成填空输入框 ---
             let fillHtml = '';
             if (q.type === '填空') {
                 let inputCls = 'fill-input';
@@ -224,7 +226,6 @@
                 fillHtml = `<input class="${inputCls}" type="text" placeholder="输入答案..." data-qid="${q.id}" value="${userAns}">`;
             }
 
-            // --- 生成反馈信息 ---
             let feedbackHtml = '';
             if (hasAnswered) {
                 const fbCls = isCorrect ? 'correct' : 'wrong';
@@ -234,7 +235,6 @@
                 feedbackHtml = `<div class="feedback"></div>`;
             }
 
-            // --- 组装题目卡片 ---
             let questionDisplay = q.text;
             if (q.type === '填空') {
                 questionDisplay = q.text.replace(/______+/g, '______').replace(/______/g, '<span class="fill-placeholder">______</span>');
@@ -257,37 +257,30 @@
 
         container.innerHTML = html;
 
-        // ---- 绑定事件 ----
-        // 选择题点击
         document.querySelectorAll('.option-item').forEach(el => {
             el.addEventListener('click', function() {
                 const qid = parseInt(this.dataset.qid);
                 const val = this.dataset.value;
                 const q = currentQuestions.find(q => q.id === qid);
                 if (!q) return;
-                // 如果已经回答则忽略
                 if (userAnswers.has(q.id) && userAnswers.get(q.id).trim() !== '') return;
-                // 记录答案
                 userAnswers.set(q.id, val);
-                // 更新闯关统计
                 if (currentMode === 'card') {
                     const correct = isAnswerCorrect(q, val);
                     if (correct) cardCorrectCount++; else cardWrongCount++;
                     updateCardIndicator();
                 }
                 updateStats();
-                render(); // 重新渲染以显示反馈
+                render();
             });
         });
 
-        // 填空输入：失焦时判断
         document.querySelectorAll('.fill-input').forEach(inp => {
             inp.addEventListener('blur', function() {
                 const qid = parseInt(this.dataset.qid);
                 const q = currentQuestions.find(q => q.id === qid);
                 if (!q) return;
                 const val = this.value;
-                // 如果已经回答则忽略
                 if (userAnswers.has(q.id) && userAnswers.get(q.id).trim() !== '') {
                     this.value = userAnswers.get(q.id);
                     return;
@@ -310,7 +303,6 @@
             });
         });
 
-        // 更新闯关指示器显示
         if (currentMode === 'card') {
             cardIndicator.style.display = 'flex';
             updateCardIndicator();
@@ -355,7 +347,6 @@
         render();
     }
 
-    // 初始化
     modeBtns.forEach(btn => {
         btn.addEventListener('click', function() {
             switchMode(this.dataset.mode);

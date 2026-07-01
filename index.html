@@ -11,7 +11,6 @@
         .header { background: linear-gradient(145deg, #0b2a4a, #1b3e62); color: white; padding: 20px 24px; border-radius: 28px; box-shadow: 0 10px 20px rgba(0,20,40,0.25); margin-bottom: 20px; }
         .header h1 { font-weight: 600; font-size: 1.8rem; letter-spacing: 0.5px; display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
         .header h1 small { font-size: 1rem; font-weight: 400; opacity: 0.85; margin-left: 6px; }
-        /* 版本标识 - 醒目 */
         .version-tag { background: #ffb347; color: #0b2a4a; font-size: 0.8rem; font-weight: 700; padding: 2px 12px; border-radius: 30px; margin-left: 12px; letter-spacing: 0.5px; }
         .header .meta { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; margin-top: 12px; font-size: 0.95rem; background: rgba(255,255,255,0.08); padding: 10px 14px; border-radius: 40px; }
         .header .meta .badge { background: #ffb347; color: #1e2f3f; padding: 0 14px; border-radius: 30px; font-weight: 600; font-size: 0.85rem; line-height: 1.8; }
@@ -56,7 +55,7 @@
     <header class="header">
         <h1>
             📡 物联网通信 <small>全题库 · 刷题闯关</small>
-            <span class="version-tag">✅ v2.0 已更新</span> <!-- ★★★ 这是版本标识 ★★★ -->
+            <span class="version-tag">✅ v2.0 已更新</span>
         </h1>
         <div class="meta">
             <span>📚 第1-8章 · 共 <span id="totalQCount">0</span> 题</span>
@@ -145,7 +144,7 @@
     ch8Choices.forEach(item => questionBank.push({ chapter: 8, type: '选择', text: item.q, options: item.opts, answer: item.ans }));
 
     // ============================================================
-    // 2. 核心逻辑：所有模式下都显示正确答案 + 版本标识
+    // 2. 核心逻辑：所有模式下都显示正确答案
     // ============================================================
     let currentMode = 'full';
     let currentQuestions = [];
@@ -188,6 +187,31 @@
         return parts.some(p => input === p);
     }
 
+    // 判断并提交答案
+    function submitAnswer(qid) {
+        const q = currentQuestions.find(q => q.id === qid);
+        if (!q) return;
+        // 如果已经回答了，不重复处理
+        if (userAnswers.has(q.id) && userAnswers.get(q.id).trim() !== '') return;
+        const input = document.querySelector(`.fill-input[data-qid="${qid}"]`);
+        if (!input) return;
+        const val = input.value;
+        if (val.trim() === '') {
+            alert('请先输入答案！');
+            return;
+        }
+        // 保存答案
+        userAnswers.set(q.id, val);
+        // 更新闯关统计
+        if (currentMode === 'card') {
+            const correct = isAnswerCorrect(q, val);
+            if (correct) cardCorrectCount++; else cardWrongCount++;
+            updateCardIndicator();
+        }
+        updateStats();
+        render();
+    }
+
     function render() {
         if (currentQuestions.length === 0) {
             container.innerHTML = `<div class="empty-state">📭 当前暂无题目，请切换模式</div>`;
@@ -220,10 +244,15 @@
             }
 
             let fillHtml = '';
+            let submitBtnHtml = '';
             if (q.type === '填空') {
                 let inputCls = 'fill-input';
                 if (hasAnswered) inputCls += isCorrect ? ' correct' : ' wrong';
-                fillHtml = `<input class="${inputCls}" type="text" placeholder="输入答案..." data-qid="${q.id}" value="${userAns}">`;
+                fillHtml = `<input class="${inputCls}" type="text" placeholder="输入答案..." data-qid="${q.id}" value="${userAns}" ${hasAnswered ? 'disabled' : ''}>`;
+                // 只有未回答时才显示提交按钮
+                if (!hasAnswered) {
+                    submitBtnHtml = `<button class="btn btn-primary submit-btn" data-qid="${q.id}" style="margin-top:6px; padding:6px 20px; font-size:0.9rem;">✅ 提交答案</button>`;
+                }
             }
 
             let feedbackHtml = '';
@@ -250,6 +279,7 @@
                     <div class="q-text">${questionDisplay}</div>
                     ${optionsHtml}
                     ${fillHtml}
+                    ${submitBtnHtml}
                     ${feedbackHtml}
                 </div>
             `;
@@ -257,6 +287,8 @@
 
         container.innerHTML = html;
 
+        // ---- 事件绑定 ----
+        // 选择题点击
         document.querySelectorAll('.option-item').forEach(el => {
             el.addEventListener('click', function() {
                 const qid = parseInt(this.dataset.qid);
@@ -275,31 +307,22 @@
             });
         });
 
-        document.querySelectorAll('.fill-input').forEach(inp => {
-            inp.addEventListener('blur', function() {
+        // 填空题：提交按钮
+        document.querySelectorAll('.submit-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
                 const qid = parseInt(this.dataset.qid);
-                const q = currentQuestions.find(q => q.id === qid);
-                if (!q) return;
-                const val = this.value;
-                if (userAnswers.has(q.id) && userAnswers.get(q.id).trim() !== '') {
-                    this.value = userAnswers.get(q.id);
-                    return;
-                }
-                if (val.trim() === '') {
-                    userAnswers.delete(q.id);
-                } else {
-                    userAnswers.set(q.id, val);
-                    if (currentMode === 'card') {
-                        const correct = isAnswerCorrect(q, val);
-                        if (correct) cardCorrectCount++; else cardWrongCount++;
-                        updateCardIndicator();
-                    }
-                }
-                updateStats();
-                render();
+                submitAnswer(qid);
             });
+        });
+
+        // 填空题：回车键提交
+        document.querySelectorAll('.fill-input').forEach(inp => {
             inp.addEventListener('keydown', function(e) {
-                if (e.key === 'Enter') this.blur();
+                if (e.key === 'Enter') {
+                    e.preventDefault();
+                    const qid = parseInt(this.dataset.qid);
+                    submitAnswer(qid);
+                }
             });
         });
 

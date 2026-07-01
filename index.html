@@ -686,7 +686,7 @@
     ch8Choices.forEach(item => questionBank.push({ chapter: 8, type: '选择', text: item.q, options: item.opts, answer: item.ans }));
 
     // ============================================================
-    // 2. 应用逻辑（与之前相同，保留全部功能）
+    // 2. 应用逻辑（修改版：所有模式下都显示正确答案，不自动跳转）
     // ============================================================
     let currentMode = 'full';
     let currentQuestions = [];
@@ -738,7 +738,19 @@
 
     function setUserAnswer(q, val) {
         userAnswers.set(q.id, val);
+        // 更新闯关统计（仅闯关模式）
+        if (currentMode === 'card' && val.trim() !== '') {
+            // 如果之前没有答案，才计数；避免重复计数
+            const existing = userAnswers.get(q.id);
+            if (!existing || existing.trim() === '') {
+                const correct = isAnswerCorrect(q, val);
+                if (correct) cardCorrectCount++;
+                else cardWrongCount++;
+                updateCardIndicator();
+            }
+        }
         updateStats();
+        render(); // 重新渲染显示反馈
     }
 
     function render() {
@@ -763,7 +775,7 @@
                     if (hasAnswered) {
                         if (isSelected && isCorrect) cls += ' correct';
                         else if (isSelected && !isCorrect) cls += ' wrong';
-                        else if (!isSelected && isCorrect) cls += ' correct';
+                        else if (!isSelected && isCorrect) cls += ' correct'; // 显示正确答案
                     } else if (isSelected) {
                         cls += ' selected';
                     }
@@ -823,70 +835,58 @@
 
         container.innerHTML = html;
 
+        // ---- 事件绑定 ----
+        // 选择题点击
         document.querySelectorAll('.option-item').forEach(el => {
             el.addEventListener('click', function() {
                 const qid = parseInt(this.dataset.qid, 10);
                 const val = this.dataset.value;
                 const q = currentQuestions.find(q => q.id === qid);
                 if (!q) return;
-                if (currentMode === 'card') {
-                    const existing = getUserAnswer(q);
-                    if (existing && existing.trim() !== '') return;
-                }
+                // 如果已经回答，不允许修改（保持答案固定，显示反馈）
+                if (getUserAnswer(q) && getUserAnswer(q).trim() !== '') return;
                 setUserAnswer(q, val);
-                if (currentMode === 'card') {
-                    const correct = isAnswerCorrect(q, val);
-                    if (correct) cardCorrectCount++;
-                    else cardWrongCount++;
-                    updateCardIndicator();
-                    setTimeout(() => {
-                        if (cardIndex < currentQuestions.length - 1) {
-                            cardIndex++;
-                            render();
-                        } else {
-                            render();
-                        }
-                    }, 600);
-                } else {
-                    render();
-                }
             });
         });
 
+        // 填空输入：实时更新，但只有失焦时才提交判断
         document.querySelectorAll('.fill-input').forEach(inp => {
             inp.addEventListener('input', function() {
                 const qid = parseInt(this.dataset.qid, 10);
-                const val = this.value;
                 const q = currentQuestions.find(q => q.id === qid);
                 if (!q) return;
-                if (currentMode === 'card') {
-                    const existing = getUserAnswer(q);
-                    if (existing && existing.trim() !== '') return;
+                // 如果已经回答，不允许修改
+                if (getUserAnswer(q) && getUserAnswer(q).trim() !== '') {
+                    this.value = getUserAnswer(q);
+                    return;
                 }
-                setUserAnswer(q, val);
+                // 实时保存输入，但不判断（失焦时判断）
+                userAnswers.set(qid, this.value);
+                updateStats();
             });
             inp.addEventListener('blur', function() {
                 const qid = parseInt(this.dataset.qid, 10);
                 const q = currentQuestions.find(q => q.id === qid);
                 if (!q) return;
+                // 如果已经回答，不允许修改
+                if (getUserAnswer(q) && getUserAnswer(q).trim() !== '') {
+                    this.value = getUserAnswer(q);
+                    return;
+                }
                 const val = this.value;
-                if (currentMode === 'card' && val.trim() !== '') {
-                    const existing = getUserAnswer(q);
-                    if (existing && existing.trim() !== '') return;
-                    const correct = isAnswerCorrect(q, val);
-                    if (correct) cardCorrectCount++;
-                    else cardWrongCount++;
-                    updateCardIndicator();
-                    setTimeout(() => {
-                        if (cardIndex < currentQuestions.length - 1) {
-                            cardIndex++;
-                            render();
-                        } else {
-                            render();
-                        }
-                    }, 600);
+                if (val.trim() !== '') {
+                    setUserAnswer(q, val);
                 } else {
+                    // 如果为空，清除答案状态
+                    userAnswers.delete(qid);
+                    updateStats();
                     render();
+                }
+            });
+            // 回车键触发失焦
+            inp.addEventListener('keydown', function(e) {
+                if (e.key === 'Enter') {
+                    this.blur();
                 }
             });
         });
